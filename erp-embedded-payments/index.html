@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Embedded Payments - MVP Demo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Interbank Design System Variables */
+        :root {
+            /* Colores Primarios */
+            --primaryGreen1: #05be50;
+            --primaryGreen2: #37CB73;
+            --primaryGreenDark: #049543;
+            --primaryGreenLight: #66D691;
+
+            /* Colores Secundarios */
+            --secondaryBlue1: #0039A6;
+            --secondaryBlue2: #1E4BB8;
+
+            /* Escalas de Grises */
+            --grayBlack: #0F191E;
+            --grayText: #333333;
+            --grayMedium: #666666;
+            --grayLight: #999999;
+            --grayLighter: #CCCCCC;
+            --grayBackground: #F8F9FA;
+            --grayBorder: #E9ECEF;
+            --white: #FFFFFF;
+
+            /* Estados */
+            --success: var(--primaryGreen1);
+            --warning: #F1C40F;
+            --error: #E74C3C;
+            --info: var(--secondaryBlue1);
+
+            /* Sombras */
+            --shadow-sm: 0 2px 4px rgba(15, 25, 30, 0.1);
+            --shadow-md: 0 4px 8px rgba(15, 25, 30, 0.15);
+            --shadow-lg: 0 8px 16px rgba(15, 25, 30, 0.2);
+
+            /* Transiciones */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--grayBackground);
+            color: var(--grayText);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .erp-header {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .erp-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondaryBlue1);
+        }
+
+        .interbank-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #E8F5E8;
+            border-radius: 20px;
+            color: var(--primaryGreenDark);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Payment Extract */
+        .payment-extract {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .extract-header {
+            background: var(--grayBackground);
+            padding: 24px;
+            border-bottom: 1px solid var(--grayBorder);
+        }
+
+        .extract-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--grayBlack);
+            margin-bottom: 16px;
+        }
+
+        .extract-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--grayMedium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--grayText);
+        }
+
+        /* Payment Table */
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .payment-table th {
+            background: var(--grayBackground);
+            padding: 16px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--grayText);
+            border-bottom: 1px solid var(--grayBorder);
+        }
+
+        .payment-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--grayBorder);
+            font-size: 14px;
+        }
+
+        .payment-table tbody tr:hover {
+            background: var(--grayBackground);
+        }
+
+        .status-check {
+            color: var(--success);
+            font-size: 16px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: 24px;
+            background: var(--grayBackground);
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+        }
+
+        .ib-primary-button, .ib-secondary-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ib-primary-button {
+            background: var(--primaryGreen1);
+            color: var(--white);
+        }
+
+        .ib-primary-button:hover {
+            background: var(--primaryGreenDark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .ib-secondary-button {
+            background: transparent;
+            color: var(--primaryGreen1);
+            border: 2px solid var(--primaryGreen1);
+        }
+
+        .ib-secondary-button:hover {
+            background: var(--primaryGreen1);
+            color: var(--white);
+        }
+
+        /* Tooltip */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--grayBlack);
+            color: var(--white);
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 280px;
+            z-index: 1000;
+            transition: var(--transition-normal);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--grayBlack) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip-check {
+            color: var(--success);
+            margin-right: 8px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-container {
+            background: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--grayBorder);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--grayBlack);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            background: var(--grayBackground);
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .confirmation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .confirmation-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .confirmation-label {
+            font-size: 12px;
+            color: var(--grayMedium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .confirmation-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--grayText);
+        }
+
+        .process-info {
+            background: #E8F5E8;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primaryGreen1);
+            margin-bottom: 24px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primaryGreen1);
+        }
+
+        /* Processing Status */
+        .processing-status {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .processing-icon {
+            font-size: 48px;
+            color: var(--primaryGreen1);
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .processing-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--grayBlack);
+        }
+
+        .processing-info {
+            background: #E8F5E8;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        /* Results */
+        .results-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .result-item {
+            background: var(--grayBackground);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--grayBlack);
+            margin-bottom: 4px;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: var(--grayMedium);
+            text-transform: uppercase;
+        }
+
+        /* Error States */
+        .error-icon {
+            font-size: 48px;
+            color: var(--error);
+            margin-bottom: 20px;
+        }
+
+        .warning-icon {
+            font-size: 48px;
+            color: var(--warning);
+            margin-bottom: 20px;
+        }
+
+        .failed-payments {
+            background: #FFF3E0;
+            border: 1px solid #FFB74D;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .failed-payment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #FFE0B2;
+        }
+
+        .failed-payment-item:last-child {
+            border-bottom: none;
+        }
+
+        .failure-reason {
+            color: var(--error);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .retry-button {
+            background: var(--warning);
+            color: var(--white);
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+
+        .retry-button:hover {
+            background: #F57C00;
+        }
+
+        /* Tab Navigation */
+        .payment-tabs {
+            display: flex;
+            background: var(--grayBackground);
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--grayMedium);
+            transition: var(--transition-normal);
+        }
+
+        .tab-button.active {
+            background: var(--white);
+            color: var(--primaryGreen1);
+            border-bottom: 3px solid var(--primaryGreen1);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: rgba(5, 190, 80, 0.1);
+            color: var(--primaryGreenDark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Enrollment States */
+        .feature-disabled {
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .feature-disabled::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+
+        .enable-feature-button {
+            background: var(--secondaryBlue1);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .enable-feature-button:hover {
+            background: var(--secondaryBlue2);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Payment Status Indicators */
+        .status-processed {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .status-failed {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .status-pending {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--white);
+            border: 2px solid var(--primaryGreen1);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1002;
+            min-width: 300px;
+            transform: translateX(calc(100% + 40px));
+            transition: transform var(--transition-normal);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primaryGreen1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="notification-header">
+            <i class="fas fa-bell"></i> Payment Results Ready
+        </div>
+        <div id="notificationContent">
+            Your payment batch has been processed. Click to view results.
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ERP Header -->
+        <div class="erp-header">
+            <div class="erp-logo">
+                <i class="fas fa-building"></i> ERP Sistema Demo
+            </div>
+            <div class="interbank-status" id="interbankStatus" style="background: #FFF3E0; color: var(--warning);">
+                <i class="fas fa-times-circle"></i>
+                Pay with Interbank Not Enrolled
+            </div>
+        </div>
+
+        <!-- Payment Extract -->
+        <div class="payment-extract">
+            <!-- Tab Navigation -->
+            <div class="payment-tabs">
+                <button class="tab-button active" onclick="switchTab('suppliers')">
+                    <i class="fas fa-truck"></i> Supplier Payments
+                </button>
+                <button class="tab-button" onclick="switchTab('payroll')">
+                    <i class="fas fa-users"></i> Payroll Batch
+                </button>
+            </div>
+
+            <!-- Suppliers Tab Content -->
+            <div id="suppliers-tab" class="tab-content active">
+                <div class="extract-header">
+                    <h2 class="extract-title">Payment Extract - Weekly Suppliers</h2>
+                    <div class="extract-info">
+                        <div class="info-item">
+                            <span class="info-label">Payment Date</span>
+                            <span class="info-value">2025-01-15</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Amount</span>
+                            <span class="info-value">S/. 127,350</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Recipients</span>
+                            <span class="info-value">45 suppliers</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Source Account</span>
+                            <span class="info-value">***-1234 (Interbank)</span>
+                        </div>
+                    </div>
+                </div>
+
+            <table class="payment-table" id="suppliersTable">
+                <thead>
+                    <tr>
+                        <th>Recipient Name</th>
+                        <th>Amount</th>
+                        <th>Bank</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Proveedor ABC S.A.C.</td>
+                        <td>S/. 12,500</td>
+                        <td>BCP</td>
+                        <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>Suministros XYZ E.I.R.L.</td>
+                        <td>S/. 8,750</td>
+                        <td>BBVA</td>
+                        <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>Distribuidor 123 S.A.</td>
+                        <td>S/. 15,200</td>
+                        <td>Scotiabank</td>
+                        <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>Servicios DEF S.R.L.</td>
+                        <td>S/. 9,100</td>
+                        <td>Interbank</td>
+                        <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>Materiales GHI S.A.C.</td>
+                        <td>S/. 6,800</td>
+                        <td>BCP</td>
+                        <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--grayMedium); font-style: italic;">
+                            ... and 40 more suppliers
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-buttons" id="suppliersActions">
+                <button class="ib-secondary-button" onclick="downloadMacro()">
+                    <i class="fas fa-download"></i> Download Macro
+                </button>
+                <!-- Not Enrolled State -->
+                <div id="enrollmentButton" class="tooltip-container">
+                    <button class="enable-feature-button" onclick="startEnrollment()">
+                        <i class="fas fa-plus-circle"></i> Enable Pay with Interbank
+                    </button>
+                    <div class="tooltip">
+                        <div><span class="tooltip-check">✅</span>No additional fees for interbank transfers</div>
+                        <div><span class="tooltip-check">✅</span>Process payments directly in ERP</div>
+                        <div><span class="tooltip-check">✅</span>Faster than traditional macro workflow</div>
+                        <br>
+                        <div>Link your Interbank account to enable embedded payments</div>
+                    </div>
+                </div>
+                <!-- Enrolled State (initially hidden) -->
+                <div id="paymentButton" class="tooltip-container" style="display: none;">
+                    <button class="ib-primary-button" onclick="openPaymentModal()">
+                        <i class="fas fa-credit-card"></i> Pay with Interbank <i class="fas fa-info-circle"></i>
+                    </button>
+                    <div class="tooltip">
+                        <div><span class="tooltip-check">✅</span>No additional fees for interbank transfers to other banks</div>
+                        <div><span class="tooltip-check">✅</span>Same standard banking fees apply</div>
+                        <div><span class="tooltip-check">✅</span>No ERP processing charges</div>
+                        <br>
+                        <div>Process payments directly without leaving your ERP workspace</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payroll Tab Content -->
+            <div id="payroll-tab" class="tab-content">
+                <div class="extract-header">
+                    <h2 class="extract-title">Payment Extract - Monthly Payroll</h2>
+                    <div class="extract-info">
+                        <div class="info-item">
+                            <span class="info-label">Payment Date</span>
+                            <span class="info-value">2025-01-30</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Amount</span>
+                            <span class="info-value">S/. 285,600</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Recipients</span>
+                            <span class="info-value">68 employees</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Source Account</span>
+                            <span class="info-value">***-1234 (Interbank)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="payment-table" id="payrollTable">
+                    <thead>
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Position</th>
+                            <th>Net Salary</th>
+                            <th>Bank</th>
+                            <th>Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>María González López</td>
+                            <td>Finance Manager</td>
+                            <td>S/. 8,500</td>
+                            <td>Interbank</td>
+                            <td><span class="status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Rodríguez Silva</td>
+                            <td>Operations Analyst</td>
+                            <td>S/. 4,200</td>
+                            <td>BCP</td>
+                            <td><span class="status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ana Vargas Castro</td>
+                            <td>Sales Representative</td>
+                            <td>S/. 3,800</td>
+                            <td>BBVA</td>
+                            <td><span class="status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Luis Mendoza Ríos</td>
+                            <td>IT Specialist</td>
+                            <td>S/. 5,200</td>
+                            <td>Scotiabank</td>
+                            <td><span class="status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Patricia Flores Díaz</td>
+                            <td>HR Coordinator</td>
+                            <td>S/. 4,800</td>
+                            <td>Interbank</td>
+                            <td><span class="status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--grayMedium); font-style: italic;">
+                                ... and 63 more employees
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="action-buttons" id="payrollActions">
+                    <button class="ib-secondary-button" onclick="downloadMacro()">
+                        <i class="fas fa-download"></i> Download Macro
+                    </button>
+                    <!-- Not Enrolled State -->
+                    <div id="enrollmentButtonPayroll" class="tooltip-container">
+                        <button class="enable-feature-button" onclick="startEnrollment()">
+                            <i class="fas fa-plus-circle"></i> Enable Pay with Interbank
+                        </button>
+                        <div class="tooltip">
+                            <div><span class="tooltip-check">✅</span>No additional fees for interbank transfers</div>
+                            <div><span class="tooltip-check">✅</span>Process payroll directly in ERP</div>
+                            <div><span class="tooltip-check">✅</span>Faster than traditional macro workflow</div>
+                            <br>
+                            <div>Link your Interbank account to enable embedded payments</div>
+                        </div>
+                    </div>
+                    <!-- Enrolled State (initially hidden) -->
+                    <div id="paymentButtonPayroll" class="tooltip-container" style="display: none;">
+                        <button class="ib-primary-button" onclick="openPaymentModal()">
+                            <i class="fas fa-credit-card"></i> Pay with Interbank <i class="fas fa-info-circle"></i>
+                        </button>
+                        <div class="tooltip">
+                            <div><span class="tooltip-check">✅</span>No additional fees for interbank transfers to other banks</div>
+                            <div><span class="tooltip-check">✅</span>Same standard banking fees apply</div>
+                            <div><span class="tooltip-check">✅</span>No ERP processing charges</div>
+                            <br>
+                            <div>Process payroll directly without leaving your ERP workspace</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Confirmation Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">💳 Pay with Interbank - Bulk Payment</h2>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-grid">
+                    <div class="confirmation-item">
+                        <span class="confirmation-label">Payment Type</span>
+                        <span class="confirmation-value">Weekly Supplier Batch</span>
+                    </div>
+                    <div class="confirmation-item">
+                        <span class="confirmation-label">Total Amount</span>
+                        <span class="confirmation-value">S/. 127,350</span>
+                    </div>
+                    <div class="confirmation-item">
+                        <span class="confirmation-label">Recipients</span>
+                        <span class="confirmation-value">45 suppliers</span>
+                    </div>
+                    <div class="confirmation-item">
+                        <span class="confirmation-label">Source Account</span>
+                        <span class="confirmation-value">***-1234 (Interbank)</span>
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-clock" style="color: var(--primaryGreen1);"></i>
+                        <strong>Process:</strong> Instructions sent immediately, results in ~10-20min
+                    </div>
+                </div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" id="confirmPayment">
+                    <label for="confirmPayment">I confirm bulk payment execution</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="closeModal()">Cancel</button>
+                <button class="ib-primary-button" onclick="sendToInterbank()">
+                    <i class="fas fa-paper-plane"></i> Send to Interbank
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Validation Modal -->
+    <div id="otpModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">🔐 Validación de Seguridad</h2>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; color: var(--secondaryBlue1); margin-bottom: 20px;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 style="margin-bottom: 16px; color: var(--grayBlack);">Código de Verificación</h3>
+                    <p style="margin-bottom: 24px; color: var(--grayMedium);">
+                        Hemos enviado un código de seguridad a tu dispositivo registrado para validar esta transacción de <strong>S/. 127,350</strong>
+                    </p>
+
+                    <div style="background: #E8F5E8; border: 1px solid var(--primaryGreen1); border-radius: 8px; padding: 16px; margin: 20px 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <i class="fas fa-shield-alt" style="color: var(--primaryGreen1);"></i>
+                            <strong>Transacción Segura</strong>
+                        </div>
+                        <p style="font-size: 14px; margin: 0;">Este código expira en 5 minutos y es válido solo para esta transacción específica.</p>
+                    </div>
+
+                    <div style="margin: 24px 0;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--grayBlack);">Ingresa el código de 6 dígitos:</label>
+                        <input type="text" id="otpCode" placeholder="000000" maxlength="6"
+                               style="width: 200px; padding: 16px; border: 2px solid var(--grayBorder); border-radius: 8px; font-size: 24px; text-align: center; letter-spacing: 8px; font-family: monospace;">
+                    </div>
+
+                    <div style="font-size: 14px; color: var(--grayMedium); margin-top: 16px;">
+                        ¿No recibiste el código?
+                        <a href="#" onclick="resendOTP()" style="color: var(--primaryGreen1); text-decoration: none; font-weight: 600;">Reenviar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="closeModal()">Cancelar</button>
+                <button class="ib-primary-button" onclick="validateOTP()">
+                    <i class="fas fa-check-circle"></i> Validar y Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Modal -->
+    <div id="processingModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">✅ Instructions Sent Successfully</h2>
+            </div>
+            <div class="modal-body">
+                <div class="processing-status">
+                    <div class="processing-icon">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                    <div class="processing-title">Batch: Weekly Suppliers (45 payments)</div>
+
+                    <div class="confirmation-grid">
+                        <div class="confirmation-item">
+                            <span class="confirmation-label">Sent to Interbank</span>
+                            <span class="confirmation-value" id="sentTime">2:15 PM</span>
+                        </div>
+                        <div class="confirmation-item">
+                            <span class="confirmation-label">Expected Results</span>
+                            <span class="confirmation-value" id="expectedTime">2:25-2:35 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="processing-info">
+                        <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
+                            <i class="fas fa-hourglass-half" style="color: var(--primaryGreen1);"></i>
+                            <strong>Status:</strong> ⏳ Waiting for Interbank processing...
+                        </div>
+                    </div>
+
+                    <div style="margin: 20px 0; color: var(--grayMedium);">
+                        💡 Continue your ERP work<br>
+                        We'll notify you when results are received from Interbank
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="viewBatchDetails()">View Batch Details</button>
+                <button class="ib-primary-button" onclick="notifyMe()">
+                    <i class="fas fa-bell"></i> Notify Me
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="resultsModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">✅ Bulk Payment Batch Completed</h2>
+            </div>
+            <div class="modal-body">
+                <div class="results-container">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-value">Weekly Suppliers</div>
+                            <div class="result-label">Batch Type</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value">S/. 127,350</div>
+                            <div class="result-label">Total Processed</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value">45/45 (100%)</div>
+                            <div class="result-label">Success Rate</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="completionTime">2:32 PM</div>
+                            <div class="result-label">Completion Time</div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--grayBackground); padding: 16px; border-radius: 8px; margin: 20px 0;">
+                        <strong>Batch ID:</strong> BATCH-2025-001234
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="downloadReport()">
+                    <i class="fas fa-download"></i> Download Report
+                </button>
+                <button class="ib-secondary-button" onclick="emailCopy()">
+                    <i class="fas fa-envelope"></i> Email Copy
+                </button>
+                <button class="ib-primary-button" onclick="viewInERP()">
+                    <i class="fas fa-chart-bar"></i> View in ERP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrollment Flow Modals -->
+
+    <!-- Feature Introduction Modal -->
+    <div id="introModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">🏦 Introducing Pay with Interbank</h2>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; color: var(--primaryGreen1); margin-bottom: 20px;">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3 style="margin-bottom: 16px; color: var(--grayBlack);">Process payments directly in your ERP</h3>
+                    <p style="margin-bottom: 24px; color: var(--grayMedium);">
+                        Skip the macro download and homebanking steps. Send payment instructions directly to Interbank and receive results back in your ERP interface.
+                    </p>
+
+                    <div style="text-align: left; background: var(--grayBackground); padding: 16px; border-radius: 8px; margin: 20px 0;">
+                        <h4 style="margin-bottom: 12px; color: var(--grayBlack);">Benefits:</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div><span class="tooltip-check">✅</span> No additional fees for interbank transfers</div>
+                            <div><span class="tooltip-check">✅</span> Process payments without leaving ERP</div>
+                            <div><span class="tooltip-check">✅</span> Automatic result integration</div>
+                            <div><span class="tooltip-check">✅</span> Faster than traditional macro workflow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="closeModal()">Maybe Later</button>
+                <button class="ib-primary-button" onclick="startAccountLinking()">
+                    <i class="fas fa-link"></i> Link Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Linking Modal -->
+    <div id="accountLinkingModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">🔗 Link Your Interbank Account</h2>
+            </div>
+            <div class="modal-body">
+                <form id="accountLinkingForm">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--grayBlack);">Company RUC:</label>
+                        <input type="text" id="companyRuc" placeholder="20123456789"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--grayBorder); border-radius: 4px; font-size: 16px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--grayBlack);">Account Number:</label>
+                        <input type="text" id="accountNumber" placeholder="194-123456789"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--grayBorder); border-radius: 4px; font-size: 16px;">
+                    </div>
+
+                    <div style="background: #E8F5E8; border: 1px solid var(--primaryGreen1); border-radius: 8px; padding: 16px; margin: 20px 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <i class="fas fa-shield-alt" style="color: var(--primaryGreen1);"></i>
+                            <strong>Secure Verification</strong>
+                        </div>
+                        <p style="font-size: 14px; margin: 0;">We'll verify your account information with Interbank to ensure secure access to embedded payments.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="closeModal()">Cancel</button>
+                <button class="ib-primary-button" onclick="verifyAccount()">
+                    <i class="fas fa-check"></i> Verify Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms & Conditions Modal -->
+    <div id="termsModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">📋 Terms & Conditions</h2>
+            </div>
+            <div class="modal-body">
+                <div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--grayBorder); padding: 16px; border-radius: 4px; margin-bottom: 20px;">
+                    <h4>Embedded Payments Service Agreement</h4>
+                    <p>By using Pay with Interbank embedded payments, you agree to:</p>
+                    <ul>
+                        <li>Allow your ERP system to send payment instructions directly to Interbank via secure SFTP connection</li>
+                        <li>Receive payment processing results back in your ERP interface</li>
+                        <li>Standard Interbank fees apply for all transactions processed</li>
+                        <li>No additional charges for using the embedded payment feature</li>
+                        <li>Payment processing times of 10-20 minutes during business hours</li>
+                        <li>Responsibility for ensuring accurate payment data before submission</li>
+                    </ul>
+                    <p><strong>Security & Privacy:</strong></p>
+                    <ul>
+                        <li>All payment data is encrypted during transmission</li>
+                        <li>No payment information is stored by the ERP provider</li>
+                        <li>Account verification follows Interbank security protocols</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                    <input type="checkbox" id="acceptTerms" style="width: 20px; height: 20px;">
+                    <label for="acceptTerms" style="font-weight: 500;">I accept the terms and conditions for embedded payments</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-secondary-button" onclick="closeModal()">Cancel</button>
+                <button class="ib-primary-button" onclick="completeEnrollment()">
+                    <i class="fas fa-check-circle"></i> Complete Setup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrollment Success Modal -->
+    <div id="enrollmentSuccessModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">🎉 Setup Complete!</h2>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; color: var(--success); margin-bottom: 20px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 style="margin-bottom: 16px; color: var(--grayBlack);">Pay with Interbank is now active!</h3>
+                    <p style="margin-bottom: 24px; color: var(--grayMedium);">
+                        Your account has been successfully linked. You can now process payments directly from your ERP without downloading macros or switching to homebanking.
+                    </p>
+
+                    <div style="background: var(--grayBackground); padding: 16px; border-radius: 8px; margin: 20px 0;">
+                        <h4 style="margin-bottom: 12px; color: var(--grayBlack);">What's Next:</h4>
+                        <div style="text-align: left;">
+                            <div style="margin-bottom: 8px;">1. 💳 Click "Pay with Interbank" on any payment extract</div>
+                            <div style="margin-bottom: 8px;">2. ⏱️ Wait 10-20 minutes for processing</div>
+                            <div style="margin-bottom: 8px;">3. 🔔 Receive notification when results are ready</div>
+                            <div>4. 📊 View payment status directly in your ERP table</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="ib-primary-button" onclick="closeModal()">
+                    <i class="fas fa-rocket"></i> Start Using Pay with Interbank
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentTab = 'suppliers';
+        let isEnrolled = false;
+
+        function downloadMacro() {
+            alert('Traditional Excel macro would be downloaded here. This simulates the old workflow.');
+        }
+
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            currentTab = tabName;
+
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        // Enrollment Flow
+        function startEnrollment() {
+            document.getElementById('introModal').style.display = 'block';
+        }
+
+        function startAccountLinking() {
+            closeModal();
+            document.getElementById('accountLinkingModal').style.display = 'block';
+        }
+
+        function verifyAccount() {
+            const ruc = document.getElementById('companyRuc').value;
+            const account = document.getElementById('accountNumber').value;
+
+            if (!ruc || !account) {
+                alert('Please enter both RUC and account number.');
+                return;
+            }
+
+            // Simulate account verification
+            closeModal();
+            setTimeout(() => {
+                document.getElementById('termsModal').style.display = 'block';
+            }, 1000); // Simulate verification delay
+        }
+
+        function completeEnrollment() {
+            const termsAccepted = document.getElementById('acceptTerms').checked;
+
+            if (!termsAccepted) {
+                alert('Please accept the terms and conditions to proceed.');
+                return;
+            }
+
+            closeModal();
+            document.getElementById('enrollmentSuccessModal').style.display = 'block';
+
+            // Update enrollment state after modal closes
+            setTimeout(() => {
+                activatePayWithInterbank();
+            }, 3000);
+        }
+
+        function activatePayWithInterbank() {
+            isEnrolled = true;
+
+            // Update header status
+            const statusElement = document.getElementById('interbankStatus');
+            statusElement.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                Pay with Interbank Active
+            `;
+            statusElement.style.background = '#E8F5E8';
+            statusElement.style.color = 'var(--primaryGreenDark)';
+
+            // Show payment buttons, hide enrollment buttons
+            document.getElementById('enrollmentButton').style.display = 'none';
+            document.getElementById('enrollmentButtonPayroll').style.display = 'none';
+            document.getElementById('paymentButton').style.display = 'block';
+            document.getElementById('paymentButtonPayroll').style.display = 'block';
+        }
+
+        // Simplified Payment Flow
+        function openPaymentModal() {
+            document.getElementById('paymentModal').style.display = 'block';
+        }
+
+        function sendToInterbank() {
+            const checkbox = document.getElementById('confirmPayment');
+            if (!checkbox.checked) {
+                alert('Please confirm the payment execution first.');
+                return;
+            }
+
+            // Close confirmation modal and show OTP validation
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('otpModal').style.display = 'flex';
+        }
+
+        function validateOTP() {
+            const otpCode = document.getElementById('otpCode').value;
+
+            if (otpCode.length !== 6) {
+                alert('Por favor ingresa un código de 6 dígitos');
+                return;
+            }
+
+            // Simulate OTP validation (in real implementation, this would verify against backend)
+            if (otpCode === '123456' || otpCode.length === 6) {
+                // Close OTP modal and show processing
+                document.getElementById('otpModal').style.display = 'none';
+                document.getElementById('processingModal').style.display = 'flex';
+
+                // Set current time
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+                document.getElementById('sentTime').textContent = timeString;
+
+                // Calculate expected time (10-20 minutes later)
+                const expected1 = new Date(now.getTime() + 10 * 60000);
+                const expected2 = new Date(now.getTime() + 20 * 60000);
+                const expectedString = expected1.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+            }) + '-' + expected2.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+                });
+                document.getElementById('expectedTime').textContent = expectedString;
+
+                // Simulate SFTP processing - results after 8 seconds (accelerated for demo)
+                setTimeout(showPaymentResults, 8000);
+            } else {
+                alert('Código incorrecto. Por favor intenta nuevamente.');
+            }
+        }
+
+        function resendOTP() {
+            // Simulate resending OTP
+            alert('Código reenviado a tu dispositivo registrado. El nuevo código expira en 5 minutos.');
+
+            // Clear the input field
+            document.getElementById('otpCode').value = '';
+            document.getElementById('otpCode').focus();
+        }
+
+        function showPaymentResults() {
+            // Close processing modal
+            document.getElementById('processingModal').style.display = 'none';
+
+            // Show notification
+            showNotification();
+
+            // Update payment table with realistic SFTP results
+            updatePaymentTable();
+        }
+
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+
+            content.innerHTML = `
+                <div>Your ${currentTab} payment batch has been processed.</div>
+                <div style="margin-top: 8px;">
+                    <button onclick="hideNotification()" style="background: var(--primaryGreen1); color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer;">
+                        View Results
+                    </button>
+                </div>
+            `;
+
+            notification.classList.add('show');
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
+        }
+
+        function updatePaymentTable() {
+            const tableId = currentTab === 'suppliers' ? 'suppliersTable' : 'payrollTable';
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll('tbody tr');
+
+            // Simulate realistic SFTP response with some failures
+            const statuses = [
+                { text: 'Processed', class: 'status-processed' },
+                { text: 'Processed', class: 'status-processed' },
+                { text: 'Insufficient Funds', class: 'status-failed' },
+                { text: 'Processed', class: 'status-processed' },
+                { text: 'Invalid Account', class: 'status-failed' }
+            ];
+
+            rows.forEach((row, index) => {
+                if (index < statuses.length) {
+                    const statusCell = row.cells[row.cells.length - 1]; // Last cell
+                    const status = statuses[index];
+                    statusCell.innerHTML = `<span class="${status.class}">${status.text}</span>`;
+                }
+            });
+        }
+
+        // Simplified support functions
+        function viewBatchDetails() {
+            alert('Detailed payment status with tracking IDs would be shown here.');
+        }
+
+        function notifyMe() {
+            alert('Notification preferences saved. You will be notified when processing completes.');
+            closeModal();
+        }
+
+        function downloadReport() {
+            alert('Payment batch report would be downloaded here.');
+        }
+
+        function emailCopy() {
+            alert('Payment confirmation would be sent to your email.');
+        }
+
+        function viewInERP() {
+            alert('Payment results have been integrated into your ERP records and reconciliation.');
+            closeModal();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize notification click handler
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('notification').addEventListener('click', hideNotification);
+        });
+    </script>
+</body>
+</html>

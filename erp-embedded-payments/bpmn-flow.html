@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPMN Flow: Pay with Interbank - User-ERP-Interbank Interactions</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geometria:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Interbank Colors */
+            --primaryGreen1: #05be50;
+            --primaryGreen2: #37CB73;
+            --secondaryBlue1: #0039A6;
+            --grayBlack: #0F191E;
+            --grayText: #333333;
+            --white: #FFFFFF;
+            --grayBackground: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--grayBackground);
+            color: var(--grayText);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primaryGreen1), var(--primaryGreen2));
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Geometria', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        .flow-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(15, 25, 30, 0.15);
+        }
+
+        .section-title {
+            font-family: 'Geometria', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondaryBlue1);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primaryGreen1);
+        }
+
+        .mermaid-container {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .flow-description {
+            background: var(--grayBackground);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primaryGreen1);
+        }
+
+        .flow-description h3 {
+            font-family: 'Geometria', sans-serif;
+            color: var(--secondaryBlue1);
+            margin-bottom: 0.5rem;
+        }
+
+        .actor-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .actor-item {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primaryGreen1);
+            text-align: center;
+        }
+
+        .actor-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-path { border-left-color: var(--primaryGreen1); }
+        .error-path { border-left-color: #dc3545; }
+        .system-path { border-left-color: var(--secondaryBlue1); }
+
+        .notes {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .notes h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .actor-legend {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 BPMN Flow: Pay with Interbank</h1>
+            <div class="subtitle">User-ERP-Interbank Interactions for Embedded Payments</div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="section-title">👥 Process Actors</h2>
+            <div class="actor-legend">
+                <div class="actor-item success-path">
+                    <div class="actor-icon">👤</div>
+                    <strong>Finance User</strong>
+                    <p>Initiates payment within ERP interface</p>
+                </div>
+                <div class="actor-item system-path">
+                    <div class="actor-icon">💻</div>
+                    <strong>ERP System</strong>
+                    <p>ARI/Defontana platform handling user interactions</p>
+                </div>
+                <div class="actor-item error-path">
+                    <div class="actor-icon">🏦</div>
+                    <strong>Interbank</strong>
+                    <p>SFTP processing and payment execution</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="section-title">🚀 Main Payment Flow</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TD
+                        A[👤 User logs into ERP] --> B[📊 User prepares payment batch]
+                        B --> E[📋 User reviews payment bulk]
+                        E --> F[✅ User validates bulk data]
+                        F --> G{📝 Valid payment data?}
+                        G -->|No| H[❌ Show validation errors]
+                        G -->|Yes| I[💳 Click 'Pay with Interbank']
+                        H --> E
+                        I --> C{🔗 Account linked?}
+                        C -->|No| D[🔗 Account linking flow]
+                        C -->|Yes| J[⚖️ ERP validates payment data]
+                        D --> J
+                        J --> K[📤 Generate SFTP file]
+                        K --> L[🔐 Send file to Interbank SFTP]
+                        L --> M[✅ Show 'Instructions sent' message]
+                        M --> N[⏳ User continues ERP work]
+                        N --> O[🔄 ERP polls for response file]
+                        O --> P{📁 Response file available?}
+                        P -->|No| Q[⏱️ Wait 5 minutes]
+                        P -->|Yes| R[📥 Download response file]
+                        Q --> O
+                        R --> S[📊 Process payment results]
+                        S --> T[🔔 Notify user of results]
+                        T --> U[📋 Display individual payment status]
+                        U --> V{❓ Any failed payments?}
+                        V -->|No| W[✅ Process complete]
+                        V -->|Yes| X[🔄 Show retry options]
+                        X --> Y[👤 User decides next action]
+                        Y --> Z{🤔 Retry failed payments?}
+                        Z -->|Yes| AA[📝 Create new batch with failed items]
+                        Z -->|No| BB[📄 Export failed payments]
+                        AA --> K
+                        BB --> W
+
+                        style A fill:#e1f5fe
+                        style I fill:#c8e6c9
+                        style L fill:#fff3e0
+                        style T fill:#f3e5f5
+                        style W fill:#e8f5e8
+                        style H fill:#ffebee
+                        style X fill:#fff3e0
+                </div>
+            </div>
+            <div class="flow-description">
+                <h3>🎯 Main Flow Description</h3>
+                <p>This represents the complete user journey from payment bulk review to final status confirmation. Users first review and validate their payment bulk data, then click "Pay with Interbank" which triggers account verification if needed. Account linking involves a hybrid manual-digital process where Interbank teams manually review submissions (1-3 business days). Once accounts are linked, the asynchronous SFTP processing means users see immediate confirmation of instruction submission, then receive results 10-20 minutes later through the ERP interface via 5-minute polling cycles.</p>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="section-title">🔗 Account Linking Subprocess</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TD
+                        AL1[🔗 Start account linking] --> AL2[📋 Show linking modal]
+                        AL2 --> AL3[📝 User enters RUC/Account]
+                        AL3 --> AL4[📜 Show terms & conditions]
+                        AL4 --> AL5[☑️ User accepts terms]
+                        AL5 --> AL6[💾 ERP saves account data]
+                        AL6 --> AL7[📤 ERP sends data to Interbank]
+                        AL7 --> AL8[⏳ Show Under Review message]
+                        AL8 --> AL9[👤 Manual: Interbank team reviews]
+                        AL9 --> AL10{✅ Account valid?}
+                        AL10 -->|Yes| AL11[📧 Interbank confirms to ERP]
+                        AL10 -->|No| AL12[❌ Interbank rejects to ERP]
+                        AL11 --> AL13[✅ ERP updates user status]
+                        AL12 --> AL14[❌ ERP notifies rejection]
+                        AL13 --> AL15[🎉 Show account linked success]
+                        AL14 --> AL16[📝 Ask user to provide valid account]
+                        AL15 --> AL17[🔄 Return to payment flow]
+                        AL16 --> AL3
+
+                        style AL1 fill:#e1f5fe
+                        style AL9 fill:#fff3e0
+                        style AL13 fill:#e8f5e8
+                        style AL14 fill:#ffebee
+                        style AL8 fill:#ffeaa7
+                </div>
+            </div>
+            <div class="flow-description">
+                <h3>🔐 Hybrid Manual-Digital Account Linking Process</h3>
+                <p>First-time users submit their account information to the ERP, which forwards it to Interbank for manual review. This hybrid process ensures security through human validation while maintaining digital workflow efficiency. The ERP stores user data and manages the async communication with Interbank teams, updating users when their accounts are approved or requiring correction for invalid submissions.</p>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="section-title">🤝 ERP-Interbank Account Validation Communication</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant U as 👤 Finance User
+                        participant E as 💻 ERP System
+                        participant I as 🏦 Interbank Team
+                        participant P as 📋 PPA System
+
+                        U->>E: Submit RUC/Account for linking
+                        E->>E: Save user account data locally
+                        E->>I: Send account validation request
+                        E->>U: Show Under review, you will be notified
+
+                        Note over I: Manual Review Process (1-3 business days)
+
+                        I->>I: Verify account ownership and permissions
+                        I->>I: Check company registration and documents
+
+                        alt Account Valid
+                            I->>P: Register account for H2H access
+                            P->>E: Send approval confirmation
+                            E->>E: Update user account status to Active
+                            E->>U: Notify Account linked successfully
+                        else Account Invalid
+                            I->>E: Send rejection with reason
+                            E->>E: Update user account status to Rejected
+                            E->>U: Notify Please provide valid account details
+                        end
+
+                        Note over U,E: User can retry with corrected information
+                </div>
+            </div>
+            <div class="flow-description">
+                <h3>🔄 Async Communication Process</h3>
+                <p>The ERP-Interbank communication for account validation is asynchronous and manual. The ERP stores user submissions and manages status updates, while Interbank teams perform security verification through human review. This ensures compliance and security while providing users with clear status visibility.</p>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="section-title">📡 SFTP Technical Process</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant U as 👤 Finance User
+                        participant E as 💻 ERP System
+                        participant S as 📁 SFTP Server
+                        participant I as 🏦 Interbank PPA
+
+                        U->>E: Click "Pay with Interbank"
+                        E->>E: Generate payment file (ISO 20022)
+                        E->>S: Upload payment file to /input folder
+                        E->>U: Show "Instructions sent, results in ~10-20 min"
+
+                        Note over S,I: Asynchronous Processing (10-20 minutes)
+
+                        I->>S: Poll /input folder every 5 minutes
+                        I->>I: Process payment batch
+                        I->>I: Execute individual payments
+                        I->>S: Upload response file to /output folder
+
+                        loop Every 5 minutes (Cron Process)
+                            E->>S: Check /output folder for response file matching batch name
+                            S-->>E: File not ready yet
+                        end
+
+                        E->>S: Check /output folder for batch-specific response file
+                        S->>E: Response file available (matching batch payment name)
+                        E->>E: Parse response file
+                        E->>U: Show payment results with individual status
+
+                        Note over U,E: User sees detailed results for each payment
+                </div>
+            </div>
+            <div class="flow-description">
+                <h3>⚙️ Technical Implementation Details</h3>
+                <p>The SFTP process is asynchronous by design. ERP systems upload payment instructions and use a 5-minute cron process to poll for response files. The ERP specifically looks for response files matching the name of the sent payment batch. Interbank processes payments in batches and returns detailed status for each individual transaction. This ensures reliable processing while maintaining user workflow continuity.</p>
+            </div>
+        </div>
+
+        <div class="notes">
+            <h4>📝 Implementation Notes</h4>
+            <ul>
+                <li><strong>SFTP Architecture:</strong> Uses existing Interbank H2H infrastructure, proven with 120+ enterprise clients</li>
+                <li><strong>File Format:</strong> ISO 20022 XML standard for payment instructions and responses</li>
+                <li><strong>Scalability:</strong> Architecture tested for high-volume enterprise payments</li>
+                <li><strong>User Experience:</strong> Asynchronous processing allows users to continue working while payments process</li>
+                <li><strong>Error Recovery:</strong> Individual payment status enables precise retry mechanisms</li>
+            </ul>
+        </div>
+
+        <div class="flow-section">
+            <h2 class="section-title">📊 Process Metrics & KPIs</h2>
+            <div class="actor-legend">
+                <div class="actor-item success-path">
+                    <div class="actor-icon">⏱️</div>
+                    <strong>Processing Time</strong>
+                    <p>10-20 minutes total<br>~30 seconds user interaction</p>
+                </div>
+                <div class="actor-item system-path">
+                    <div class="actor-icon">✅</div>
+                    <strong>Success Rate</strong>
+                    <p>Target: >98%<br>Based on H2H performance</p>
+                </div>
+                <div class="actor-item error-path">
+                    <div class="actor-icon">🔄</div>
+                    <strong>Retry Rate</strong>
+                    <p>Target: <5%<br>Automatic error recovery</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#05be50',
+                primaryTextColor: '#333333',
+                primaryBorderColor: '#05be50',
+                lineColor: '#666666',
+                secondaryColor: '#37CB73',
+                tertiaryColor: '#F8F9FA',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f8f9fa',
+                tertiaryBkg: '#e9ecef'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            sequence: {
+                diagramMarginX: 50,
+                diagramMarginY: 10,
+                actorMargin: 50,
+                width: 150,
+                height: 65,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35
+            }
+        });
+
+        // Add smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.flow-section');
+
+            // Add intersection observer for smooth reveals
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
