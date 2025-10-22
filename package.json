@@ -1,0 +1,20 @@
+{
+  "name": "interbank-cashout-prototypes",
+  "version": "1.0.0",
+  "description": "Interactive prototype demo space for Interbank B2B & B2E Cashout initiatives",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "interbank",
+    "cashout",
+    "prototypes",
+    "b2b",
+    "b2e",
+    "demos"
+  ],
+  "author": "Interbank",
+  "license": "UNLICENSED",
+  "private": true
+}

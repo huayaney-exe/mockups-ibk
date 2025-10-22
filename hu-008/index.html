@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo: Nuevas Glosas World Class - Interbank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(180deg, #e8f5e9 0%, #f1f8f4 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Toggle Switch */
+        .toggle-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .toggle-label.active {
+            color: #00d170;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #00d170;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.old {
+            background: #ff9800;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.old .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-new {
+            background: #e3f9ed;
+            color: #00d170;
+        }
+
+        .badge-old {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .badge-type {
+            background: #e3f2fd;
+            color: #2196f3;
+            font-size: 10px;
+            margin-left: 8px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: #00d170;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        /* Balance Section */
+        .balance-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-item {
+            text-align: center;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+
+        .balance-label {
+            font-size: 16px;
+            color: #0066cc;
+            font-weight: 500;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: white;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #00d170;
+            border-bottom: 3px solid #00d170;
+        }
+
+        /* Movements List */
+        .movements-container {
+            background: white;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .movement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .movement-item:hover {
+            background: #f8f9fa;
+        }
+
+        .movement-item:last-child {
+            border-bottom: none;
+        }
+
+        .movement-left {
+            flex: 1;
+        }
+
+        .movement-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .movement-date {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .movement-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .movement-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+
+        .movement-status {
+            font-size: 13px;
+            color: #999;
+            text-align: right;
+            margin-top: 3px;
+        }
+
+        .arrow {
+            color: #00d170;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Status colors */
+        .status-pending {
+            color: #ff9800;
+        }
+
+        .status-completed {
+            color: #00d170;
+        }
+
+        /* Movement types */
+        .movement-item.pending .movement-title {
+            color: #999;
+        }
+
+        .movement-item.completed .movement-title {
+            color: #333;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .stats-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-job {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .stat-score {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-old {
+            color: #ff9800;
+        }
+
+        .stat-new {
+            color: #00d170;
+        }
+
+        .stat-arrow {
+            font-size: 20px;
+            color: #666;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .improvement-badge {
+            display: inline-block;
+            background: #e3f9ed;
+            color: #00d170;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="/" style="font-size: 24px; cursor: pointer; color: white; text-decoration: none;">←</a>
+            <h1>Demo: Glosas World Class</h1>
+            <div class="header-icons">
+                <div class="icon">⚙️</div>
+                <div class="icon">⋮</div>
+            </div>
+        </div>
+
+        <!-- Toggle Between Old and New -->
+        <div class="toggle-container">
+            <span class="toggle-label" id="labelNew">NUEVO (World Class)</span>
+            <div class="toggle-switch" id="toggleSwitch" onclick="toggleVersion()">
+                <div class="toggle-slider"></div>
+            </div>
+            <span class="toggle-label" id="labelOld">ACTUAL (HU-008)</span>
+        </div>
+
+        <!-- Balance Section -->
+        <div class="balance-section">
+            <div class="balance-item">
+                <div class="balance-amount">S/ 1,234.56</div>
+                <div class="balance-label">Saldo disponible</div>
+            </div>
+            <div class="balance-item">
+                <div class="balance-amount">S/ 89.12</div>
+                <div class="balance-label">Ahorro total</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active">Movimientos</button>
+            <button class="tab">Movimientos alcancía</button>
+        </div>
+
+        <!-- Movements List -->
+        <div class="movements-container" id="movementsList">
+            <!-- Movements will be dynamically inserted here -->
+        </div>
+
+        <!-- Stats Comparison Section -->
+        <div class="stats-section">
+            <div class="stats-title">📊 Mejora Medible: Análisis Jobs-to-be-Done</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-job">🔍 IDENTIFICAR</div>
+                    <div class="stat-comparison">
+                        <div>
+                            <div class="stat-score stat-old">4/10</div>
+                            <div class="stat-label">Actual</div>
+                        </div>
+                        <div class="stat-arrow">→</div>
+                        <div>
+                            <div class="stat-score stat-new">9/10</div>
+                            <div class="stat-label">Nuevo</div>
+                        </div>
+                    </div>
+                    <div class="improvement-badge">+125% mejora</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-job">🔗 CONCILIAR</div>
+                    <div class="stat-comparison">
+                        <div>
+                            <div class="stat-score stat-old">7/10</div>
+                            <div class="stat-label">Actual</div>
+                        </div>
+                        <div class="stat-arrow">→</div>
+                        <div>
+                            <div class="stat-score stat-new">9/10</div>
+                            <div class="stat-label">Nuevo</div>
+                        </div>
+                    </div>
+                    <div class="improvement-badge">+29% mejora</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-job">🔎 RASTREAR</div>
+                    <div class="stat-comparison">
+                        <div>
+                            <div class="stat-score stat-old">8/10</div>
+                            <div class="stat-label">Actual</div>
+                        </div>
+                        <div class="stat-arrow">→</div>
+                        <div>
+                            <div class="stat-score stat-new">9/10</div>
+                            <div class="stat-label">Nuevo</div>
+                        </div>
+                    </div>
+                    <div class="improvement-badge">+13% mejora</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-job">📂 CATEGORIZAR</div>
+                    <div class="stat-comparison">
+                        <div>
+                            <div class="stat-score stat-old">2/10</div>
+                            <div class="stat-label">Actual</div>
+                        </div>
+                        <div class="stat-arrow">→</div>
+                        <div>
+                            <div class="stat-score stat-new">9/10</div>
+                            <div class="stat-label">Nuevo</div>
+                        </div>
+                    </div>
+                    <div class="improvement-badge">+350% mejora</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #e3f9ed; border-radius: 8px; text-align: center;">
+                <div style="font-size: 18px; font-weight: 700; color: #00d170; margin-bottom: 8px;">
+                    Score Promedio: 5.25 → 8.75
+                </div>
+                <div style="font-size: 24px; font-weight: 700; color: #00d170;">
+                    +67% Mejora Total
+                </div>
+                <div style="font-size: 14px; color: #666; margin-top: 8px;">
+                    Nivel World Class alcanzado 🏆
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data structure for movements
+        const movementsData = [
+            {
+                type: 'proveedor_corriente',
+                oldGlosa: 'ABONO PROVEEDORES Sodimac Pe',
+                newGlosa: 'De Sodimac Prov',
+                date: 'Lun 15 Oct | 2:30 pm',
+                amount: '+1,500.00',
+                status: 'completed',
+                badge: 'B2B - Corriente'
+            },
+            {
+                type: 'proveedor_ahorro',
+                oldGlosa: 'PPA PRV Ali',
+                newGlosa: 'De Alicorp Prov',
+                date: 'Lun 15 Oct | 11:15 am',
+                amount: '+2,340.00',
+                status: 'completed',
+                badge: 'B2B - Ahorro'
+            },
+            {
+                type: 'planilla',
+                oldGlosa: 'PPA PAGOS',
+                newGlosa: 'De Interbank Sueldo',
+                date: 'Vie 27 Sep | 12:00 pm',
+                amount: '+5,200.00',
+                status: 'completed',
+                badge: 'B2E - Planilla'
+            },
+            {
+                type: 'cts',
+                oldGlosa: 'PPA CTS Rip',
+                newGlosa: 'De Ripley CTS',
+                date: 'Mié 15 May | 9:00 am',
+                amount: '+8,500.00',
+                status: 'completed',
+                badge: 'B2E - CTS'
+            },
+            {
+                type: 'varios_corriente',
+                oldGlosa: 'ABONO PAGOS VARIOS Enel Peru',
+                newGlosa: 'De Enel Serv Luz-Oct25',
+                date: 'Jue 10 Oct | 3:15 pm',
+                amount: '+189.90',
+                status: 'completed',
+                badge: 'Varios'
+            },
+            {
+                type: 'varios_ahorro',
+                oldGlosa: 'PPA OPM Cla',
+                newGlosa: 'De Claro Serv Tel-9876',
+                date: 'Mar 08 Oct | 10:22 am',
+                amount: '+89.90',
+                status: 'completed',
+                badge: 'Varios - Ahorro'
+            },
+            {
+                type: 'proveedor_corriente',
+                oldGlosa: 'ABONO PROVEEDORES Iraoka SAC',
+                newGlosa: 'De Iraoka Prov',
+                date: 'Lun 07 Oct | 4:50 pm',
+                amount: '+750.00',
+                status: 'completed',
+                badge: 'B2B - Corriente'
+            },
+            {
+                type: 'proveedor_ahorro',
+                oldGlosa: 'PPA PRV Int',
+                newGlosa: 'De IBK TI',
+                date: 'Vie 04 Oct | 9:30 am',
+                amount: '+12,500.00',
+                status: 'completed',
+                badge: 'B2B - Ahorro'
+            }
+        ];
+
+        // Current version state
+        let isOldVersion = false;
+
+        // Render movements
+        function renderMovements() {
+            const container = document.getElementById('movementsList');
+            container.innerHTML = '';
+
+            movementsData.forEach(movement => {
+                const glosa = isOldVersion ? movement.oldGlosa : movement.newGlosa;
+                const badgeClass = isOldVersion ? 'badge-old' : 'badge-new';
+                const badgeText = isOldVersion ? 'Actual' : 'Nuevo';
+
+                const movementHTML = `
+                    <div class="movement-item ${movement.status}">
+                        <div class="movement-left">
+                            <div class="movement-title">
+                                ${glosa}
+                                <span class="badge ${badgeClass}">${badgeText}</span>
+                                <span class="badge badge-type">${movement.badge}</span>
+                            </div>
+                            <div class="movement-date">${movement.date}</div>
+                        </div>
+                        <div class="movement-right">
+                            <div>
+                                <div class="movement-amount">S/ ${movement.amount}</div>
+                            </div>
+                            <div class="arrow">›</div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += movementHTML;
+            });
+        }
+
+        // Toggle version
+        function toggleVersion() {
+            isOldVersion = !isOldVersion;
+            const toggleSwitch = document.getElementById('toggleSwitch');
+            const labelNew = document.getElementById('labelNew');
+            const labelOld = document.getElementById('labelOld');
+
+            if (isOldVersion) {
+                toggleSwitch.classList.add('old');
+                labelOld.classList.add('active');
+                labelNew.classList.remove('active');
+            } else {
+                toggleSwitch.classList.remove('old');
+                labelNew.classList.add('active');
+                labelOld.classList.remove('active');
+            }
+
+            renderMovements();
+        }
+
+        // Initial render
+        renderMovements();
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
