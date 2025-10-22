@@ -2,5 +2,15 @@
   "version": 2,
   "name": "interbank-cashout-prototypes",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/erp-embedded-payments",
+      "destination": "/erp-embedded-payments/index.html"
+    },
+    {
+      "source": "/erp-embedded-payments/flow",
+      "destination": "/erp-embedded-payments/bpmn-flow.html"
+    }
+  ]
 }
