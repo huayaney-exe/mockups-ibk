@@ -351,6 +351,110 @@
             font-weight: 600;
             margin-top: 8px;
         }
+
+        /* Documentation Section */
+        .documentation-banner {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .documentation-banner:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .doc-toggle-icon {
+            font-size: 14px;
+            color: #666;
+            transition: transform 0.3s;
+        }
+
+        .doc-toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .documentation-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .doc-section {
+            margin-bottom: 24px;
+        }
+
+        .doc-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: white;
+        }
+
+        .doc-table th,
+        .doc-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+
+        .doc-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .doc-table td {
+            color: #666;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comparison-table td {
+            color: #666;
+        }
+
+        .comparison-table code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .comparison-table small {
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -362,6 +466,179 @@
             <div class="header-icons">
                 <div class="icon">⚙️</div>
                 <div class="icon">⋮</div>
+            </div>
+        </div>
+
+        <!-- Documentation Section -->
+        <div class="documentation-banner" onclick="toggleDocumentation()">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="badge-type" style="background: #1976d2; color: white;">HU-008</span>
+                <span style="font-weight: 600; color: #0f191e;">📋 Documentación Técnica</span>
+            </div>
+            <span class="doc-toggle-icon" id="docToggleIcon">▼</span>
+        </div>
+
+        <div class="documentation-content" id="documentationContent" style="display: none;">
+            <div class="doc-section">
+                <h3 style="color: #0066cc; margin-bottom: 12px; font-size: 18px; font-weight: 600;">Historia de Usuario</h3>
+                <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; border-left: 4px solid #0066cc;">
+                    <p style="margin-bottom: 8px;"><strong>Como</strong> beneficiario de pagos desde Interbank</p>
+                    <p style="margin-bottom: 8px;"><strong>Quiero</strong> que la glosa/descripción del abono sea clara y contenga datos del ordenante</p>
+                    <p style="margin: 0;"><strong>Para</strong> identificar fácilmente el origen, motivo y referencia del pago en mi estado de cuenta</p>
+                </div>
+            </div>
+
+            <div class="doc-section">
+                <h3 style="color: #0066cc; margin-bottom: 12px; font-size: 18px; font-weight: 600;">Criterios de Aceptación</h3>
+                <div style="background: #e3f9ed; padding: 16px; border-radius: 8px; border-left: 4px solid #00d170;">
+                    <p style="margin: 0;"><strong>CA1 - Formato Estándar de Glosa Optimizada</strong></p>
+                    <p style="margin: 8px 0 0 0; color: #666;">Debe contener texto que indique el ordenante que envió el pago para tranquilidad del beneficiario.</p>
+                </div>
+            </div>
+
+            <div class="doc-section">
+                <h3 style="color: #ff9800; margin-bottom: 12px; font-size: 18px; font-weight: 600;">⚠️ Sistema Actual - Limitaciones</h3>
+                <div style="overflow-x: auto;">
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Rubro</th>
+                                <th>Tipo Cuenta</th>
+                                <th>TRX</th>
+                                <th>Glosa Fija</th>
+                                <th>Glosa Variable</th>
+                                <th>Chars</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Proveedores</td>
+                                <td>Corriente</td>
+                                <td>4211</td>
+                                <td>ABONO PROVEEDORES</td>
+                                <td>Nombre largo empresa</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Proveedores</td>
+                                <td>Ahorros</td>
+                                <td>5490</td>
+                                <td>PPA PRV</td>
+                                <td>Nombre corto empresa</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Planilla</td>
+                                <td>Ahorros</td>
+                                <td>5490</td>
+                                <td>PPA PAGOS</td>
+                                <td>No aplica</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>Varios</td>
+                                <td>Corriente</td>
+                                <td>4212</td>
+                                <td>ABONO PAGOS VARIOS</td>
+                                <td>Nombre largo empresa</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Varios</td>
+                                <td>Ahorro</td>
+                                <td>5490</td>
+                                <td>PPA OPM</td>
+                                <td>Nombre corto empresa</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>CTS</td>
+                                <td>CTS</td>
+                                <td>4490</td>
+                                <td>PPA CTS</td>
+                                <td>Nombre corto empresa</td>
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 12px; color: #666; font-size: 14px;"><strong>Problemas:</strong> Códigos internos (PPA, PRV, OPM), truncamiento extremo (3-10 chars), redundancia verbal</p>
+            </div>
+
+            <div class="doc-section">
+                <h3 style="color: #00d170; margin-bottom: 12px; font-size: 18px; font-weight: 600;">🔄 Comparativa: ANTES → AHORA</h3>
+                <div style="overflow-x: auto;">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>ANTES</th>
+                                <th>AHORA</th>
+                                <th>Mejora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge-type">Proveedores Cte</span></td>
+                                <td><code>ABONO PROVEEDORES Sodimac Pe</code><br><small>(28 chars)</small></td>
+                                <td><code>De Sodimac</code><br><small>(10 chars)</small></td>
+                                <td>-64% chars<br>Nombre completo</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge-type">Proveedores Aho</span></td>
+                                <td><code>PPA PRV Ali</code><br><small>(10 chars)</small></td>
+                                <td><code>De Alicorp</code><br><small>(10 chars)</small></td>
+                                <td>Sin códigos<br>Nombre completo</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge-type">Planilla</span></td>
+                                <td><code>PPA PAGOS</code><br><small>(9 chars)</small></td>
+                                <td><code>Planilla Interbank</code><br><small>(17 chars)</small></td>
+                                <td>Categoría clara<br>+ Empleador</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge-type">CTS</span></td>
+                                <td><code>PPA CTS Rip</code><br><small>(10 chars)</small></td>
+                                <td><code>CTS Ripley</code><br><small>(10 chars)</small></td>
+                                <td>Sin código PPA<br>Nombre completo</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge-type">Varios Cte</span></td>
+                                <td><code>ABONO PAGOS VARIOS Enel Peru</code><br><small>(29 chars)</small></td>
+                                <td><code>De Enel</code><br><small>(7 chars)</small></td>
+                                <td>-76% chars<br>Sin redundancia</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge-type">Varios Aho</span></td>
+                                <td><code>PPA OPM Cla</code><br><small>(10 chars)</small></td>
+                                <td><code>De Claro</code><br><small>(8 chars)</small></td>
+                                <td>Sin códigos<br>Nombre completo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="doc-section" style="margin-bottom: 0;">
+                <h3 style="color: #0066cc; margin-bottom: 12px; font-size: 18px; font-weight: 600;">Patrones de Cambio Implementados</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                    <div style="background: #fff3e0; padding: 12px; border-radius: 8px; border-left: 3px solid #ff9800;">
+                        <div style="font-weight: 600; color: #ff9800; margin-bottom: 4px;">❌ Eliminado</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                            <li>Códigos internos (PPA, PRV, OPM)</li>
+                            <li>Redundancia verbal</li>
+                            <li>Truncamiento extremo</li>
+                        </ul>
+                    </div>
+                    <div style="background: #e3f9ed; padding: 12px; border-radius: 8px; border-left: 3px solid #00d170;">
+                        <div style="font-weight: 600; color: #00d170; margin-bottom: 4px;">✅ Agregado</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                            <li>Preposición "De" (dirección clara)</li>
+                            <li>Nombres completos de empresas</li>
+                            <li>Categoría explícita (Planilla, CTS)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -622,6 +899,20 @@
                 this.classList.add('active');
             });
         });
+
+        // Documentation toggle functionality
+        function toggleDocumentation() {
+            const content = document.getElementById('documentationContent');
+            const icon = document.getElementById('docToggleIcon');
+
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.classList.add('expanded');
+            } else {
+                content.style.display = 'none';
+                icon.classList.remove('expanded');
+            }
+        }
     </script>
 </body>
 </html>
