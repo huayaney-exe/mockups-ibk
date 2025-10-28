@@ -333,7 +333,11 @@
             const overlay = document.getElementById('passwordOverlay');
             const content = document.getElementById('mainContent');
 
-            if (input.value === 'cash') {
+            if (input.value === 'impacslosqueremos') {
+                // Redirect directly to HU-008 mockup
+                sessionStorage.setItem('authenticated', 'true');
+                window.location.href = '/hu-008';
+            } else if (input.value === 'cash') {
                 overlay.classList.add('hidden');
                 content.classList.remove('hidden');
                 sessionStorage.setItem('authenticated', 'true');
