@@ -566,6 +566,54 @@
             </div>
 
             <div class="doc-section">
+                <h3 style="color: #00d170; margin-bottom: 12px; font-size: 18px; font-weight: 600;">✅ Sistema Nuevo - Especificaciones</h3>
+                <div style="overflow-x: auto;">
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Rubro</th>
+                                <th>Glosa Fija</th>
+                                <th>Glosa Variable</th>
+                                <th>Chars Max</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Proveedores</td>
+                                <td><strong>De</strong></td>
+                                <td>Nombre largo empresa</td>
+                                <td>15</td>
+                                <td>"De Sodimac"</td>
+                            </tr>
+                            <tr>
+                                <td>Planilla</td>
+                                <td><strong>Planilla de</strong></td>
+                                <td>Nombre largo empresa</td>
+                                <td>15</td>
+                                <td>"Planilla de Interbank"</td>
+                            </tr>
+                            <tr>
+                                <td>CTS</td>
+                                <td><strong>CTS</strong></td>
+                                <td>Nombre largo empresa</td>
+                                <td>15</td>
+                                <td>"CTS Ripley"</td>
+                            </tr>
+                            <tr>
+                                <td>Varios</td>
+                                <td><strong>De</strong></td>
+                                <td>Nombre largo empresa</td>
+                                <td>15</td>
+                                <td>"De Enel"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 12px; color: #666; font-size: 14px;"><strong>Mejoras:</strong> Glosas fijas simples y claras, nombres completos (hasta 15 chars), sin códigos técnicos</p>
+            </div>
+
+            <div class="doc-section">
                 <h3 style="color: #00d170; margin-bottom: 12px; font-size: 18px; font-weight: 600;">🔄 Comparativa: ANTES → AHORA</h3>
                 <div style="overflow-x: auto;">
                     <table class="comparison-table">
@@ -593,7 +641,7 @@
                             <tr>
                                 <td><span class="badge-type">Planilla</span></td>
                                 <td><code>PPA PAGOS</code><br><small>(9 chars)</small></td>
-                                <td><code>Planilla Interbank</code><br><small>(17 chars)</small></td>
+                                <td><code>Planilla de Interbank</code><br><small>(20 chars)</small></td>
                                 <td>Categoría clara<br>+ Empleador</td>
                             </tr>
                             <tr>
@@ -781,7 +829,7 @@
             {
                 type: 'planilla',
                 oldGlosa: 'PPA PAGOS',
-                newGlosa: 'Planilla Interbank',
+                newGlosa: 'Planilla de Interbank',
                 date: 'Vie 27 Sep | 12:00 pm',
                 amount: '+5,200.00',
                 status: 'completed',
