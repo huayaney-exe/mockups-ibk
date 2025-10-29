@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Secuencia - Flujo Operacional H2H Shinkansen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geometria:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primaryGreen1: #05be50;
+            --primaryGreenDark: #049543;
+            --secondaryBlue1: #0039A6;
+            --extendedBeige1: #F0F0DC;
+            --extendedRed1: #E74C3C;
+            --grayBlack: #0F191E;
+            --grayText: #333333;
+            --grayMedium: #666666;
+            --grayBackground: #F8F9FA;
+            --white: #FFFFFF;
+            --shadow-lg: 0 8px 16px rgba(15, 25, 30, 0.2);
+            --transition-normal: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--grayBackground) 0%, var(--extendedBeige1) 100%);
+            color: var(--grayText);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 60px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primaryGreen1);
+        }
+
+        .ibk-logo {
+            font-family: 'Geometria', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primaryGreen1);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: var(--transition-normal);
+        }
+
+        .back-link:hover {
+            background: var(--primaryGreenDark);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-family: 'Geometria', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--grayBlack);
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: var(--primaryGreen1);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--grayMedium);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .diagram-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .footer-note {
+            background: var(--grayBackground);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid var(--primaryGreen1);
+            margin-top: 30px;
+        }
+
+        .footer-note h3 {
+            font-family: 'Geometria', sans-serif;
+            color: var(--grayBlack);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .footer-note p {
+            color: var(--grayMedium);
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .footer-note strong {
+            color: var(--extendedRed1);
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 40px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .ibk-logo {
+                font-size: 1.8rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="ibk-logo">Interbank</div>
+            <a href="index.html" class="back-link">
+                ← Volver a Presentación
+            </a>
+        </div>
+
+        <h1>Diagrama de Secuencia <span class="highlight">Operacional</span></h1>
+        <p class="subtitle">Flujo completo del proceso H2H con Shinkansen</p>
+
+        <div class="diagram-container">
+            <pre class="mermaid">
+sequenceDiagram
+    participant Cliente as Cliente Empresarial
+    participant InterbankComercial as Interbank Comercial
+    participant Shinkansen as Shinkansen
+    participant InterbankSFTP as Interbank SFTP
+    participant InterbankH2H as Interbank H2H
+    participant CCE as CCE (Cámara Compensación)
+    participant InterbankContabilidad as Interbank Contabilidad
+
+    Note over Cliente: Identifica necesidad<br/>de automatización H2H
+
+    Cliente->>InterbankComercial: Contacta para implementar H2H
+    InterbankComercial->>InterbankComercial: Evalúa capacidad técnica del cliente
+
+    Note over InterbankComercial: Detecta gap técnico:<br/>Cliente carece de equipo IT
+
+    InterbankComercial->>Shinkansen: Referencia cliente vía email
+
+    Shinkansen->>Cliente: Contacta y evalúa ERP/sistema
+    Shinkansen->>Shinkansen: Desarrolla código de integración personalizado
+    Shinkansen->>Cliente: Instala código en sistema del cliente
+    Shinkansen->>Shinkansen: Configura PGP/SFTP
+
+    Shinkansen->>InterbankComercial: Solicita provisión de credenciales
+    InterbankComercial->>InterbankSFTP: Crea credenciales SFTP para cliente
+    InterbankComercial->>Shinkansen: Entrega credenciales
+    Shinkansen->>Cliente: Configura credenciales en sistema
+
+    Note over Cliente,InterbankSFTP: ✅ Conexión establecida<br/>(1-2 semanas)
+
+    loop Procesamiento de pagos diario
+        Cliente->>InterbankSFTP: Envía archivo de pagos (PGP encriptado)
+        InterbankSFTP->>InterbankH2H: Transfiere archivo para procesamiento
+        InterbankH2H->>InterbankH2H: Valida y procesa archivo
+        InterbankH2H->>CCE: Envía pagos masivos
+        CCE->>CCE: Ejecuta compensación
+        InterbankH2H->>InterbankSFTP: Genera archivo de confirmación
+        InterbankSFTP->>Cliente: Entrega confirmación
+
+        Note over Shinkansen,Cliente: Shinkansen cobra al cliente<br/>1.5 soles/transacción
+    end
+
+    Note over Shinkansen: Fin de semana:<br/>Calcula total transacciones
+
+    loop Liquidación semanal
+        Shinkansen->>InterbankContabilidad: Deposita 0.9 soles × total transacciones
+
+        Note over InterbankContabilidad: ⚠️ PROCESO MANUAL
+
+        InterbankContabilidad->>InterbankContabilidad: Recibe notificación de depósito bancario
+        InterbankContabilidad->>InterbankH2H: Solicita reporte de transacciones semanales
+        InterbankH2H->>InterbankContabilidad: Entrega reporte de volumen
+        InterbankContabilidad->>InterbankContabilidad: Calcula manualmente: volumen × 0.9 soles
+        InterbankContabilidad->>InterbankContabilidad: Verifica que depósito coincida con cálculo
+
+        alt Monto coincide
+            InterbankContabilidad->>InterbankContabilidad: Genera comprobante contable manual
+            Note over InterbankContabilidad: ❌ PAIN POINT:<br/>Generación manual de comprobantes<br/>(2-4 horas/semana)
+        else Monto no coincide
+            InterbankContabilidad->>Shinkansen: Inicia investigación de discrepancia
+            InterbankContabilidad->>InterbankContabilidad: Ajusta y genera comprobante
+        end
+
+        InterbankContabilidad->>InterbankContabilidad: Archiva documentación soporte
+    end
+            </pre>
+        </div>
+
+        <div class="footer-note">
+            <h3>Modelo Financiero</h3>
+            <p><strong>Cliente</strong> paga a Shinkansen: <strong>1.5 soles/transacción</strong></p>
+            <p><strong>Shinkansen</strong> paga a Interbank: <strong>0.9 soles/transacción</strong></p>
+            <p><strong>Margen Shinkansen:</strong> 0.6 soles/transacción (40% margen bruto)</p>
+
+            <h3 style="margin-top: 25px;">Pain Point Crítico Identificado</h3>
+            <p><strong>Generación manual de comprobantes contables semanales</strong></p>
+            <p>El equipo de contabilidad debe:</p>
+            <ul style="margin-left: 25px; margin-top: 10px; line-height: 2;">
+                <li>Recibir notificación de depósito bancario</li>
+                <li>Solicitar manualmente reporte de transacciones a Operaciones</li>
+                <li>Calcular ingreso esperado (volumen × 0.9 soles)</li>
+                <li>Verificar que el depósito coincida</li>
+                <li>Generar comprobante contable en sistema</li>
+                <li>Archivar documentación de soporte</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>Tiempo:</strong> 2-4 horas por semana por partner</p>
+            <p><strong>Riesgo de escalabilidad:</strong> Con 3 partners activos en Q1 2026, el proceso manual se multiplica por 3 (6-12 horas/semana)</p>
+
+            <h3 style="margin-top: 25px;">Nota Técnica</h3>
+            <p>Shinkansen desarrolla código de integración personalizado que se instala en el sistema del cliente. El cliente se conecta <strong>directamente al SFTP de Interbank</strong> - no existe infraestructura SFTP intermedia de Shinkansen.</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#05be50',
+                primaryTextColor: '#0F191E',
+                primaryBorderColor: '#049543',
+                lineColor: '#666666',
+                secondaryColor: '#0039A6',
+                tertiaryColor: '#F0F0DC',
+                noteBkgColor: '#F0F0DC',
+                noteBorderColor: '#05be50',
+                noteTextColor: '#0F191E',
+                actorBkg: '#0039A6',
+                actorBorder: '#002F85',
+                actorTextColor: '#FFFFFF',
+                sequenceNumberColor: '#FFFFFF',
+                signalColor: '#333333',
+                signalTextColor: '#0F191E',
+                labelBoxBkgColor: '#05be50',
+                labelBoxBorderColor: '#049543',
+                labelTextColor: '#FFFFFF',
+                loopTextColor: '#0F191E',
+                activationBorderColor: '#049543',
+                activationBkgColor: '#66D691'
+            }
+        });
+    </script>
+</body>
+</html>
