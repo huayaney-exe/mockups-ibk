@@ -11,6 +11,14 @@
     {
       "source": "/erp-embedded-payments/flow",
       "destination": "/erp-embedded-payments/bpmn-flow.html"
+    },
+    {
+      "source": "/erp-partners",
+      "destination": "/erp-partners/index.html"
+    },
+    {
+      "source": "/bpmn",
+      "destination": "/erp-partners/bpmn.html"
     }
   ]
 }
