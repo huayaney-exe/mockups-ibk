@@ -191,7 +191,6 @@ sequenceDiagram
     participant Shinkansen as Shinkansen
     participant InterbankSFTP as Interbank SFTP
     participant InterbankH2H as Interbank H2H
-    participant CCE as CCE (Cámara Compensación)
     participant InterbankContabilidad as Interbank Contabilidad
 
     Note over Cliente: Identifica necesidad<br/>de automatización H2H
@@ -206,7 +205,7 @@ sequenceDiagram
     Shinkansen->>Cliente: Contacta y evalúa ERP/sistema
     Shinkansen->>Shinkansen: Desarrolla código de integración personalizado
     Shinkansen->>Cliente: Instala código en sistema del cliente
-    Shinkansen->>Shinkansen: Configura PGP/SFTP
+    Shinkansen->>Shinkansen: Configura SFTP
 
     Shinkansen->>InterbankComercial: Solicita provisión de credenciales
     InterbankComercial->>InterbankSFTP: Crea credenciales SFTP para cliente
@@ -216,11 +215,9 @@ sequenceDiagram
     Note over Cliente,InterbankSFTP: ✅ Conexión establecida<br/>(1-2 semanas)
 
     loop Procesamiento de pagos diario
-        Cliente->>InterbankSFTP: Envía archivo de pagos (PGP encriptado)
+        Cliente->>InterbankSFTP: Envía archivo de pagos (SFTP)
         InterbankSFTP->>InterbankH2H: Transfiere archivo para procesamiento
         InterbankH2H->>InterbankH2H: Valida y procesa archivo
-        InterbankH2H->>CCE: Envía pagos masivos
-        CCE->>CCE: Ejecuta compensación
         InterbankH2H->>InterbankSFTP: Genera archivo de confirmación
         InterbankSFTP->>Cliente: Entrega confirmación
 
