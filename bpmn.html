@@ -221,27 +221,28 @@ sequenceDiagram
         InterbankH2H->>InterbankSFTP: Genera archivo de confirmación
         InterbankSFTP->>Cliente: Entrega confirmación
 
-        Note over Shinkansen,Cliente: Shinkansen cobra al cliente<br/>1.5 soles/transacción
+        Note over Cliente,InterbankH2H: Cliente paga tarifa mensual H2H a Interbank<br/>Pricing único cubre comisiones de pagos
     end
 
-    Note over Shinkansen: Fin de semana:<br/>Calcula total transacciones
+    Note over Shinkansen: Fin de mes:<br/>Prepara facturación mensual
 
-    loop Liquidación semanal
-        Shinkansen->>InterbankContabilidad: Deposita 0.9 soles × total transacciones
+    loop Facturación mensual
+        Shinkansen->>InterbankContabilidad: Envía factura mensual por servicios
 
         Note over InterbankContabilidad: ⚠️ PROCESO MANUAL
 
-        InterbankContabilidad->>InterbankContabilidad: Recibe notificación de depósito bancario
-        InterbankContabilidad->>InterbankH2H: Solicita reporte de transacciones semanales
+        InterbankContabilidad->>InterbankContabilidad: Recibe factura de Shinkansen
+        InterbankContabilidad->>InterbankH2H: Solicita reporte de transacciones mensuales
         InterbankH2H->>InterbankContabilidad: Entrega reporte de volumen
-        InterbankContabilidad->>InterbankContabilidad: Calcula manualmente: volumen × 0.9 soles
-        InterbankContabilidad->>InterbankContabilidad: Verifica que depósito coincida con cálculo
+        InterbankContabilidad->>InterbankContabilidad: Verifica servicios prestados vs factura
+        InterbankContabilidad->>InterbankContabilidad: Valida monto facturado
 
-        alt Monto coincide
+        alt Factura correcta
             InterbankContabilidad->>InterbankContabilidad: Genera comprobante contable manual
-            Note over InterbankContabilidad: ❌ PAIN POINT:<br/>Generación manual de comprobantes<br/>(2-4 horas/semana)
-        else Monto no coincide
-            InterbankContabilidad->>Shinkansen: Inicia investigación de discrepancia
+            InterbankContabilidad->>Shinkansen: Procesa pago a mes siguiente
+            Note over InterbankContabilidad: ❌ PAIN POINT:<br/>Generación manual de comprobantes<br/>(2-4 horas/mes)
+        else Discrepancia detectada
+            InterbankContabilidad->>Shinkansen: Solicita aclaración de factura
             InterbankContabilidad->>InterbankContabilidad: Ajusta y genera comprobante
         end
 
@@ -252,26 +253,28 @@ sequenceDiagram
 
         <div class="footer-note">
             <h3>Modelo Financiero</h3>
-            <p><strong>Cliente</strong> paga a Shinkansen: <strong>1.5 soles/transacción</strong></p>
-            <p><strong>Shinkansen</strong> paga a Interbank: <strong>0.9 soles/transacción</strong></p>
-            <p><strong>Margen Shinkansen:</strong> 0.6 soles/transacción (40% margen bruto)</p>
+            <p><strong>Cliente</strong> paga a Interbank: <strong>Tarifa mensual H2H</strong> (pricing único que cubre todas las comisiones de pagos)</p>
+            <p><strong>Shinkansen</strong> factura a Interbank: <strong>Servicios mensuales por integración y soporte</strong></p>
+            <p><strong>Pago a Shinkansen:</strong> Se procesa al mes siguiente de recibir la factura</p>
 
             <h3 style="margin-top: 25px;">Pain Point Crítico Identificado</h3>
-            <p><strong>Generación manual de comprobantes contables semanales</strong></p>
+            <p><strong>Generación manual de comprobantes contables mensuales</strong></p>
             <p>El equipo de contabilidad debe:</p>
             <ul style="margin-left: 25px; margin-top: 10px; line-height: 2;">
-                <li>Recibir notificación de depósito bancario</li>
+                <li>Recibir factura mensual de Shinkansen</li>
                 <li>Solicitar manualmente reporte de transacciones a Operaciones</li>
-                <li>Calcular ingreso esperado (volumen × 0.9 soles)</li>
-                <li>Verificar que el depósito coincida</li>
+                <li>Verificar servicios prestados vs monto facturado</li>
+                <li>Validar correcta facturación</li>
                 <li>Generar comprobante contable en sistema</li>
+                <li>Procesar pago al mes siguiente</li>
                 <li>Archivar documentación de soporte</li>
             </ul>
-            <p style="margin-top: 15px;"><strong>Tiempo:</strong> 2-4 horas por semana por partner</p>
-            <p><strong>Riesgo de escalabilidad:</strong> Con 3 partners activos en Q1 2026, el proceso manual se multiplica por 3 (6-12 horas/semana)</p>
+            <p style="margin-top: 15px;"><strong>Tiempo:</strong> 2-4 horas por mes por partner</p>
+            <p><strong>Riesgo de escalabilidad:</strong> Con 3 partners activos en Q1 2026, el proceso manual se multiplica por 3 (6-12 horas/mes)</p>
 
             <h3 style="margin-top: 25px;">Nota Técnica</h3>
             <p>Shinkansen desarrolla código de integración personalizado que se instala en el sistema del cliente. El cliente se conecta <strong>directamente al SFTP de Interbank</strong> - no existe infraestructura SFTP intermedia de Shinkansen.</p>
+            <p style="margin-top: 10px;">El acuerdo con Shinkansen utiliza un <strong>pricing único</strong> que ya incluye todas las comisiones generadas por los pagos. Los clientes mantienen su tarifa mensual H2H habitual con Interbank.</p>
         </div>
     </div>
 
