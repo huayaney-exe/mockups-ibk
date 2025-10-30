@@ -15,10 +15,6 @@
     {
       "source": "/erp-partners",
       "destination": "/erp-partners/index.html"
-    },
-    {
-      "source": "/bpmn",
-      "destination": "/erp-partners/bpmn.html"
     }
   ]
 }
