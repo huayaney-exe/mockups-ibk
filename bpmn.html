@@ -221,14 +221,19 @@ sequenceDiagram
         InterbankH2H->>InterbankSFTP: Genera archivo de confirmación
         InterbankSFTP->>Cliente: Entrega confirmación
 
-        Note over Cliente,Shinkansen: Por cada transacción se genera comisión:<br/>OPCIÓN A: Interbank cobra directamente (requiere desarrollo)<br/>OPCIÓN B: Shinkansen cobra y paga a Interbank (sin desarrollo)
+        Note over Cliente,InterbankH2H: COMISIÓN POR TRANSACCIÓN:<br/>OPCIÓN A: Interbank cobra directamente al cliente (requiere desarrollo)<br/>OPCIÓN B: Shinkansen cobra al cliente (sin desarrollo)
 
-        Shinkansen->>Shinkansen: Acumula conteo de transacciones diarias
+        alt OPCIÓN A: Interbank cobra directo
+            InterbankH2H->>Cliente: Cobra comisión por transacción
+        else OPCIÓN B: Shinkansen cobra y paga
+            Shinkansen->>Cliente: Cobra comisión por transacción
+            Shinkansen->>Shinkansen: Acumula conteo para facturar a Interbank
+        end
     end
 
-    Note over Shinkansen: Fin de mes:<br/>Calcula total transacciones × 0.6 soles
+    Note over Shinkansen: OPCIÓN B - Fin de mes:<br/>Calcula total transacciones × 0.6 soles
 
-    loop Facturación mensual
+    loop Facturación mensual (solo OPCIÓN B)
         Shinkansen->>InterbankContabilidad: Envía factura mensual por transacciones procesadas
 
         Note over InterbankContabilidad: ⚠️ PROCESO MANUAL
@@ -255,15 +260,28 @@ sequenceDiagram
 
         <div class="footer-note">
             <h3>Modelo Financiero</h3>
-            <p><strong>Cliente</strong> paga: <strong>Tarifa mensual H2H</strong> (servicio fijo mensual)</p>
-            <p><strong>Comisión por transacción</strong> (generada diariamente):</p>
-            <ul style="margin-left: 25px; margin-top: 5px; line-height: 1.8;">
-                <li><strong>OPCIÓN A</strong> (requiere desarrollo): Interbank cobra comisión directamente al cliente</li>
-                <li><strong>OPCIÓN B</strong> (sin desarrollo): Shinkansen cobra al cliente y paga a Interbank</li>
-            </ul>
-            <p style="margin-top: 10px;"><strong>Shinkansen</strong> acumula transacciones del mes y factura: <strong>volumen × 0.6 soles/transacción</strong></p>
-            <p><strong>Pago a Shinkansen:</strong> Se procesa al mes siguiente de recibir la factura</p>
-            <p style="margin-top: 10px; color: #666; font-size: 14px;"><em>Nota: BCP otorga a Shinkansen un margen de 0.45 soles por transacción (dato referencial)</em></p>
+            <p><strong>Cliente</strong> paga: <strong>Tarifa mensual H2H</strong> (servicio fijo mensual a Shinkansen)</p>
+
+            <p style="margin-top: 15px;"><strong>Comisión por transacción</strong> (dos opciones):</p>
+
+            <div style="margin-left: 25px; margin-top: 10px;">
+                <p><strong>OPCIÓN A</strong> (requiere desarrollo):</p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Interbank cobra comisión <strong>directamente al cliente</strong> por cada transacción</li>
+                    <li>Shinkansen NO cobra comisión por transacciones</li>
+                    <li>Shinkansen NO factura a Interbank</li>
+                </ul>
+
+                <p style="margin-top: 15px;"><strong>OPCIÓN B</strong> (sin desarrollo, implementada actualmente):</p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Shinkansen cobra comisión <strong>directamente al cliente</strong> por cada transacción</li>
+                    <li>Shinkansen acumula el conteo mensual de transacciones</li>
+                    <li>Fin de mes: Shinkansen factura a Interbank <strong>volumen × 0.6 soles/transacción</strong></li>
+                    <li>Interbank procesa pago a Shinkansen al mes siguiente</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 15px; color: #666; font-size: 14px;"><em>Nota técnica: BCP otorga a Shinkansen un margen de 0.45 soles por transacción (dato referencial de mercado)</em></p>
 
             <h3 style="margin-top: 25px;">Pain Point Crítico Identificado</h3>
             <p><strong>Generación manual de comprobantes contables mensuales</strong></p>
