@@ -231,17 +231,17 @@ sequenceDiagram
         end
     end
 
-    Note over Shinkansen: OPCIÓN B - Fin de mes:<br/>Calcula total transacciones × 0.6 soles
+    Note over Shinkansen: OPCIÓN B - Fin de mes:<br/>Calcula 50% del volumen total cobrado al cliente
 
     loop Facturación mensual (solo OPCIÓN B)
-        Shinkansen->>InterbankContabilidad: Envía factura mensual por transacciones procesadas
+        Shinkansen->>InterbankContabilidad: Envía factura mensual (50% de comisiones cobradas)
 
         Note over InterbankContabilidad: ⚠️ PROCESO MANUAL
 
         InterbankContabilidad->>InterbankContabilidad: Recibe factura de Shinkansen
         InterbankContabilidad->>InterbankH2H: Solicita reporte de transacciones mensuales
         InterbankH2H->>InterbankContabilidad: Entrega reporte de volumen
-        InterbankContabilidad->>InterbankContabilidad: Calcula: volumen × 0.6 soles
+        InterbankContabilidad->>InterbankContabilidad: Calcula: 50% del volumen × tarifa cliente
         InterbankContabilidad->>InterbankContabilidad: Verifica que factura coincida con cálculo
 
         alt Monto coincide
@@ -274,22 +274,132 @@ sequenceDiagram
 
                 <p style="margin-top: 15px;"><strong>OPCIÓN B</strong> (sin desarrollo, implementada actualmente):</p>
                 <ul style="margin-left: 20px; line-height: 1.8;">
-                    <li>Shinkansen cobra comisión <strong>directamente al cliente</strong> por cada transacción</li>
+                    <li>Shinkansen cobra comisión <strong>directamente al cliente</strong> por cada transacción (rango: 1.00 - 2.00 soles)</li>
                     <li>Shinkansen acumula el conteo mensual de transacciones</li>
-                    <li>Fin de mes: Shinkansen factura a Interbank <strong>volumen × 0.6 soles/transacción</strong></li>
+                    <li>Fin de mes: Shinkansen factura a Interbank el <strong>50% del volumen total cobrado</strong> (mínimo: 0.50 soles/transacción)</li>
                     <li>Interbank procesa pago a Shinkansen al mes siguiente</li>
+                    <li>Shinkansen retiene el otro 50% como su margen operativo</li>
                 </ul>
             </div>
 
             <p style="margin-top: 15px; color: #666; font-size: 14px;"><em>Nota técnica: BCP otorga a Shinkansen un margen de 0.45 soles por transacción (dato referencial de mercado)</em></p>
 
+            <h3 style="margin-top: 25px;">Análisis de Costos Operacionales H2H</h3>
+            <p><strong>Costo promedio por transacción H2H para Interbank</strong> (datos históricos 2025):</p>
+
+            <table style="width: 100%; margin-top: 15px; border-collapse: collapse; font-size: 14px;">
+                <thead>
+                    <tr style="background: var(--primaryGreen1); color: white;">
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Periodo</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Ene 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Feb 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Mar 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Abr 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">May 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Jun 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Jul 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Ago 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Sep 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Oct 2025</th>
+                        <th style="padding: 10px; text-align: center; border: 1px solid #ddd; background: var(--primaryGreenDark);">Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600;">Costo (S/)</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.70</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; background: #e8f5e9;">0.50</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; background: #e8f5e9;">0.50</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.60</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; background: #fff9c4;">0.40</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; background: #e8f5e9;">0.50</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.60</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.70</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.60</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.60</td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 700; background: #c8e6c9;">0.57</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 15px; padding: 15px; background: #fff9c4; border-left: 4px solid #fbc02d; border-radius: 4px;">
+                <p style="margin: 0; color: #333;"><strong>📊 Insight clave:</strong> El costo operacional varía entre <strong>0.40 - 0.70 soles</strong> por transacción, con un <strong>piso técnico de 0.50 soles</strong> (costo mínimo sostenible).</p>
+            </div>
+
+            <h3 style="margin-top: 25px;">Propuesta de Pricing Interbank</h3>
+            <div style="margin-left: 25px;">
+                <p><strong>Modelo de Revenue Share 50/50:</strong></p>
+                <ul style="margin-left: 20px; line-height: 1.8; margin-top: 10px;">
+                    <li><strong>Shinkansen cobra al cliente:</strong> Entre 1.00 - 2.00 soles por transacción (rango flexible según cliente)</li>
+                    <li><strong>Interbank recibe:</strong> 50% de lo cobrado (mínimo garantizado: 0.50 soles)</li>
+                    <li><strong>Shinkansen retiene:</strong> 50% de lo cobrado como su margen</li>
+                    <li><strong>Proceso:</strong> Shinkansen cobra todo al cliente → factura a Interbank mensualmente → Interbank paga 50% del volumen total</li>
+                </ul>
+
+                <div style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-left: 4px solid var(--primaryGreen1); border-radius: 4px;">
+                    <p style="margin: 0; color: #333;"><strong>✅ Ventaja del modelo:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 8px; line-height: 1.6;">
+                        <li>Cubre costo operacional mínimo (0.50 soles) garantizando rentabilidad</li>
+                        <li>Margen promedio esperado: 0.07 - 0.10 soles por transacción (12-20%)</li>
+                        <li>Flexibilidad comercial para Shinkansen según perfil del cliente</li>
+                        <li>Alineación de incentivos: a mayor volumen, mayor ingreso para ambos</li>
+                    </ul>
+                </div>
+
+                <p style="margin-top: 15px;"><strong>Ejemplo de cálculo:</strong></p>
+                <table style="width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px;">
+                    <thead>
+                        <tr style="background: var(--secondaryBlue1); color: white;">
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Concepto</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Tarifa 1.00 S/</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Tarifa 1.50 S/</th>
+                            <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Tarifa 2.00 S/</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Shinkansen cobra al cliente</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1.00</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1.50</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">2.00</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: 600;">Interbank recibe (50%)</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600;">0.50</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600;">0.75</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600;">1.00</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Costo operacional promedio</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.57</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.57</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.57</td>
+                        </tr>
+                        <tr style="background: #ffebee;">
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: 600;">Margen Interbank</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600; color: var(--extendedRed1);">-0.07</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600; background: #c8e6c9;">+0.18</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd; font-weight: 600; background: #c8e6c9;">+0.43</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Shinkansen retiene (50%)</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.50</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.75</td>
+                            <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top: 10px; color: #666; font-size: 13px;"><em>Nota: Tarifa mínima recomendada de 1.20 S/ para garantizar rentabilidad en ambos lados. Tarifa de 1.00 S/ no cubre costos promedio de Interbank.</em></p>
+            </div>
+
             <h3 style="margin-top: 25px;">Pain Point Crítico Identificado</h3>
             <p><strong>Generación manual de comprobantes contables mensuales</strong></p>
             <p>El equipo de contabilidad debe:</p>
             <ul style="margin-left: 25px; margin-top: 10px; line-height: 2;">
-                <li>Recibir factura mensual de Shinkansen</li>
+                <li>Recibir factura mensual de Shinkansen (50% de comisiones cobradas)</li>
                 <li>Solicitar manualmente reporte de transacciones a Operaciones</li>
-                <li>Calcular monto esperado (volumen × 0.6 soles)</li>
+                <li>Calcular monto esperado (50% del volumen × tarifa cliente)</li>
                 <li>Verificar que factura coincida con cálculo</li>
                 <li>Generar comprobante contable en sistema</li>
                 <li>Procesar pago al mes siguiente</li>
@@ -300,7 +410,8 @@ sequenceDiagram
 
             <h3 style="margin-top: 25px;">Nota Técnica</h3>
             <p>Shinkansen desarrolla código de integración personalizado que se instala en el sistema del cliente. El cliente se conecta <strong>directamente al SFTP de Interbank</strong> - no existe infraestructura SFTP intermedia de Shinkansen.</p>
-            <p style="margin-top: 10px;"><strong>Propuesta comercial Interbank:</strong> Cobrar 0.6 soles por transacción a Shinkansen. Shinkansen negocia su propio margen con el cliente final.</p>
+            <p style="margin-top: 10px;"><strong>Modelo actual (pre-análisis de costos):</strong> Interbank cobraba 0.6 soles fijos por transacción a Shinkansen, quien negociaba su propio margen con el cliente final.</p>
+            <p style="margin-top: 10px;"><strong>Propuesta actualizada (post-análisis):</strong> Revenue share 50/50 con tarifa flexible cliente (1.00-2.00 soles) garantizando mínimo 0.50 soles para Interbank y mejorando escalabilidad del modelo.</p>
         </div>
     </div>
 
