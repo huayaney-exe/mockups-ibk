@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecosistema de Partners H2H - Presentación Ejecutiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geometria:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            /* Interbank Design System Colors */
+            --primaryGreen1: #05be50;
+            --primaryGreen2: #37CB73;
+            --primaryGreen3: #4DD478;
+            --primaryGreenDark: #049543;
+            --primaryGreenLight: #66D691;
+
+            --secondaryBlue1: #0039A6;
+            --secondaryBlue2: #1E4BB8;
+            --secondaryBlueDark: #002F85;
+            --secondaryBlueLight: #3366CC;
+
+            --extendedBeige1: #F0F0DC;
+            --extendedBeige2: #F5F5E6;
+            --extendedOrange1: #FF6B35;
+            --extendedOrange2: #FF8B5A;
+            --extendedRed1: #E74C3C;
+            --extendedYellow1: #F1C40F;
+
+            --grayBlack: #0F191E;
+            --grayText: #333333;
+            --grayMedium: #666666;
+            --grayLight: #999999;
+            --grayLighter: #CCCCCC;
+            --grayBackground: #F8F9FA;
+            --grayBorder: #E9ECEF;
+            --white: #FFFFFF;
+
+            --success: var(--primaryGreen1);
+            --warning: var(--extendedYellow1);
+            --error: var(--extendedRed1);
+            --info: var(--secondaryBlue1);
+
+            --shadow-sm: 0 2px 4px rgba(15, 25, 30, 0.1);
+            --shadow-md: 0 4px 8px rgba(15, 25, 30, 0.15);
+            --shadow-lg: 0 8px 16px rgba(15, 25, 30, 0.2);
+
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--grayBackground) 0%, var(--extendedBeige1) 100%);
+            color: var(--grayText);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px 80px;
+            position: relative;
+            background: var(--white);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primaryGreen1);
+        }
+
+        .ibk-logo {
+            font-family: 'Geometria', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .slide-number {
+            font-size: 1.2rem;
+            color: var(--grayMedium);
+            font-weight: 500;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-title {
+            font-family: 'Geometria', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--grayBlack);
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .slide-subtitle {
+            font-size: 1.5rem;
+            color: var(--grayMedium);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .highlight {
+            color: var(--primaryGreen1);
+        }
+
+        .highlight-blue {
+            color: var(--secondaryBlue1);
+        }
+
+        .highlight-orange {
+            color: var(--extendedOrange1);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .content-single {
+            grid-column: 1 / -1;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--extendedBeige2) 100%);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--primaryGreen1);
+            transition: var(--transition-normal);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-value {
+            font-family: 'Geometria', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1.1rem;
+            color: var(--grayText);
+            font-weight: 600;
+        }
+
+        .initiative-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            border-left: 5px solid;
+            transition: var(--transition-normal);
+        }
+
+        .initiative-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .initiative-card.priority-high { border-left-color: var(--extendedOrange1); }
+
+        .initiative-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .initiative-title {
+            font-family: 'Geometria', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--grayBlack);
+        }
+
+        .priority-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .priority-high { background: var(--extendedOrange1); }
+
+        .initiative-score {
+            font-family: 'Geometria', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+        }
+
+        .initiative-description {
+            font-size: 1rem;
+            color: var(--grayMedium);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .user-story {
+            background: var(--extendedBeige2);
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            color: var(--grayText);
+            border-left: 3px solid var(--primaryGreen1);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .status-prioritized {
+            background: var(--extendedOrange2);
+            color: var(--extendedOrange1);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primaryGreen1);
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-button:hover {
+            background: var(--primaryGreenDark);
+            transform: scale(1.1);
+        }
+
+        .nav-button:disabled {
+            background: var(--grayLight);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bpmn-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: var(--secondaryBlue1);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
+            z-index: 1000;
+        }
+
+        .bpmn-button:hover {
+            background: var(--secondaryBlueDark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .slide-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px solid var(--grayBorder);
+            font-size: 0.9rem;
+            color: var(--grayMedium);
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-number {
+            font-family: 'Geometria', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--grayMedium);
+            margin-top: 5px;
+        }
+
+        .impact-visualization {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .impact-bar {
+            flex: 1;
+            height: 12px;
+            background: var(--grayLighter);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .impact-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primaryGreen1) 0%, var(--primaryGreenLight) 100%);
+            border-radius: 6px;
+            transition: width var(--transition-slow);
+        }
+
+        .squad-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--secondaryBlue1);
+            color: var(--white);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .key-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--grayBorder);
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .key-points li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primaryGreen1);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--grayLighter);
+            z-index: 1001;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primaryGreen1) 0%, var(--secondaryBlue1) 100%);
+            transition: width var(--transition-normal);
+        }
+
+        .roadmap-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primaryGreen1);
+            transform: translateY(-50%);
+        }
+
+        .timeline-milestone {
+            background: var(--white);
+            border: 3px solid var(--primaryGreen1);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 180px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .milestone-quarter {
+            font-family: 'Geometria', sans-serif;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .milestone-desc {
+            font-size: 0.9rem;
+            color: var(--grayText);
+        }
+
+        /* BPMN Diagram Styles */
+        .bpmn-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 2px solid var(--grayBorder);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .bpmn-swimlane {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            border-bottom: 2px solid var(--grayBorder);
+            min-height: 120px;
+        }
+
+        .bpmn-swimlane:last-child {
+            border-bottom: none;
+        }
+
+        .swimlane-header {
+            background: var(--secondaryBlue1);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            border-right: 2px solid var(--grayBorder);
+        }
+
+        .swimlane-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .bpmn-activity {
+            background: var(--white);
+            border: 2px solid var(--primaryGreen1);
+            border-radius: 8px;
+            padding: 12px 18px;
+            min-width: 140px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--grayBlack);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .bpmn-activity.automated {
+            background: var(--primaryGreenLight);
+            border-color: var(--primaryGreen1);
+        }
+
+        .bpmn-activity.manual {
+            background: var(--extendedOrange2);
+            border-color: var(--extendedOrange1);
+        }
+
+        .bpmn-activity.pain-point {
+            background: var(--extendedRed1);
+            border-color: var(--extendedRed1);
+            color: var(--white);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .bpmn-arrow {
+            width: 40px;
+            height: 2px;
+            background: var(--grayMedium);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .bpmn-arrow::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid var(--grayMedium);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .bpmn-legend {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--extendedBeige2);
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .legend-box {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .legend-box.automated {
+            background: var(--primaryGreenLight);
+            border-color: var(--primaryGreen1);
+        }
+
+        .legend-box.manual {
+            background: var(--extendedOrange2);
+            border-color: var(--extendedOrange1);
+        }
+
+        .legend-box.pain-point {
+            background: var(--extendedRed1);
+            border-color: var(--extendedRed1);
+        }
+
+        .partner-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .partner-card {
+            background: var(--white);
+            border: 2px solid var(--primaryGreen1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition-normal);
+        }
+
+        .partner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .partner-name {
+            font-family: 'Geometria', sans-serif;
+            font-weight: 700;
+            color: var(--grayBlack);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .partner-specialization {
+            font-size: 0.9rem;
+            color: var(--grayMedium);
+            margin-bottom: 10px;
+        }
+
+        .partner-banks {
+            font-size: 0.8rem;
+            color: var(--secondaryBlue1);
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .slide {
+                padding: 40px 60px;
+            }
+
+            .slide-title {
+                font-size: 2.8rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .overview-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .partner-matrix {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 40px;
+            }
+
+            .slide-title {
+                font-size: 2.2rem;
+            }
+
+            .ibk-logo {
+                font-size: 1.8rem;
+            }
+
+            .overview-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .bpmn-swimlane {
+                grid-template-columns: 120px 1fr;
+                min-height: 100px;
+            }
+
+            .swimlane-header {
+                font-size: 0.85rem;
+                padding: 15px 10px;
+            }
+
+            .swimlane-content {
+                padding: 15px 10px;
+                gap: 10px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .bpmn-activity {
+                min-width: 120px;
+                font-size: 0.75rem;
+                padding: 10px 12px;
+                flex-shrink: 0;
+            }
+
+            .bpmn-arrow {
+                width: 30px;
+            }
+
+            .bpmn-legend {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-indicator">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="slide-header">
+                <div class="ibk-logo">Interbank</div>
+                <div class="slide-number">1 / 4</div>
+            </div>
+            <div class="slide-content">
+                <h1 class="slide-title">Ecosistema de Partners <span class="highlight">H2H</span></h1>
+                <p class="slide-subtitle">Democratizar conectividad bancaria empresarial</p>
+                <div class="overview-stats">
+                    <div class="stat-box">
+                        <span class="stat-number">5</span>
+                        <div class="stat-label">Empresas conectadas en 2024</div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">✓</span>
+                        <div class="stat-label">Modelo validado con Shinkansen</div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">3</span>
+                        <div class="stat-label">Partners objetivo</div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">Q4 2025</span>
+                        <div class="stat-label">Lanzamiento comercial</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <div>Iniciativa H2H Partners Ecosystem</div>
+                <div>Q4 2025</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem & Solution -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="ibk-logo">Interbank</div>
+                <div class="slide-number">2 / 4</div>
+            </div>
+            <div class="slide-content">
+                <h1 class="slide-title">El <span class="highlight">Problema</span></h1>
+                <div class="content-grid">
+                    <div>
+                        <h3 style="color: var(--extendedRed1); margin-bottom: 20px;">Barrera de Acceso</h3>
+                        <ul class="key-points">
+                            <li>Empresas medianas carecen de capacidad técnica para implementar H2H</li>
+                            <li>No conocen que existen integradores especializados</li>
+                            <li>Falta oferta comercial estructurada</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--primaryGreen1); margin-bottom: 20px;">Modelo Validado</h3>
+                        <div class="metric-card">
+                            <div class="metric-value">5</div>
+                            <div class="metric-label">Empresas conectadas con Shinkansen (2024)</div>
+                        </div>
+                        <div class="metric-card" style="margin-top: 20px;">
+                            <div class="metric-value">✓</div>
+                            <div class="metric-label">Contrato aprobado por Comité de Riesgos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <div>Propuesta: Modelo Revenue Share 50/50</div>
+                <div>Shinkansen cobra 1.40-2.00 soles/txn → Interbank recibe mínimo 0.70 soles/txn</div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Ecosystem -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="ibk-logo">Interbank</div>
+                <div class="slide-number">3 / 4</div>
+            </div>
+            <div class="slide-content">
+                <h1 class="slide-title">El <span class="highlight">Ecosistema</span></h1>
+                <div class="content-single">
+                    <div class="partner-matrix">
+                        <div class="partner-card">
+                            <div class="partner-name">Shinkansen</div>
+                            <div class="partner-specialization">Conectividad multibanco</div>
+                            <div class="partner-banks">Interbank, BCP, Scotiabank</div>
+                            <div style="margin-top: 15px; padding: 8px; background: var(--primaryGreenLight); border-radius: 5px; font-size: 0.8rem; font-weight: 600;">
+                                ✓ VALIDADO (5 empresas)
+                            </div>
+                        </div>
+                        <div class="partner-card">
+                            <div class="partner-name">Intelecta Perú</div>
+                            <div class="partner-specialization">Especialistas SAP</div>
+                            <div class="partner-banks">Interbank, BCP, BBVA</div>
+                            <div style="margin-top: 15px; padding: 8px; background: var(--extendedOrange2); border-radius: 5px; font-size: 0.8rem; font-weight: 600;">
+                                Q1 2026
+                            </div>
+                        </div>
+                        <div class="partner-card">
+                            <div class="partner-name">William Haks-Thyssen</div>
+                            <div class="partner-specialization">Expertos PGP/SFTP</div>
+                            <div class="partner-banks">Multibanco Perú</div>
+                            <div style="margin-top: 15px; padding: 8px; background: var(--extendedOrange2); border-radius: 5px; font-size: 0.8rem; font-weight: 600;">
+                                Q1 2026
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 40px; padding: 25px; background: var(--extendedBeige2); border-radius: 8px; border-left: 5px solid var(--primaryGreen1);">
+                        <h3 style="margin-bottom: 15px;">Flujo Operacional</h3>
+                        <p style="line-height: 1.8;">Cliente → Shinkansen desarrolla código → Cliente conecta directo a SFTP Interbank → Pagos procesados vía H2H</p>
+                        <p style="margin-top: 10px;"><strong>Modelo financiero propuesto:</strong> Revenue Share 50/50 - Shinkansen cobra 1.40-2.00 soles/txn al cliente → Interbank recibe 50% (mínimo 0.70 soles/txn) → Facturación mensual</p>
+                        <p style="margin-top: 10px; color: var(--extendedRed1);"><strong>Pain Point:</strong> Contabilidad genera comprobantes manualmente cada mes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <div>3 integradores especializados en conectividad H2H/SFTP</div>
+                <div><a href="bpmn.html" style="color: var(--primaryGreen1); text-decoration: none; font-weight: 600;">Ver diagrama de secuencia completo →</a></div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Next Steps -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="ibk-logo">Interbank</div>
+                <div class="slide-number">4 / 4</div>
+            </div>
+            <div class="slide-content">
+                <h1 class="slide-title">Próximos <span class="highlight">Pasos</span></h1>
+                <div class="content-grid">
+                    <div>
+                        <h3 style="color: var(--extendedOrange1); margin-bottom: 20px;">Q4 2025: Lanzamiento</h3>
+                        <ul class="key-points">
+                            <li>Reactivar contrato Shinkansen (ya aprobado)</li>
+                            <li>Capacitar equipo comercial</li>
+                            <li>Lanzar oferta al mercado</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--secondaryBlue1); margin-bottom: 20px;">Q1 2026: Expansión</h3>
+                        <ul class="key-points">
+                            <li>Incorporar Intelecta Perú</li>
+                            <li>Incorporar William Haks-Thyssen</li>
+                            <li>Estandarizar procesos</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-single" style="margin-top: 40px;">
+                    <div style="background: var(--extendedBeige2); padding: 25px; border-radius: 10px; border-left: 5px solid var(--primaryGreen1);">
+                        <h3 style="margin-bottom: 15px;">Decisión Solicitada</h3>
+                        <p style="line-height: 1.8;">Aprobar lanzamiento Q4 2025 del ecosistema de partners H2H, iniciando con Shinkansen (modelo validado con 5 empresas conectadas en 2024)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <div>Propuesta: Revenue Share 50/50 con mínimo 0.70 soles/txn</div>
+                <div>Flexibilidad comercial según perfil de cliente</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="bpmn.html" class="bpmn-button">
+        <i class="fas fa-project-diagram"></i>
+        Ver Flujo BPMN
+    </a>
+
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+
+            slides[currentSlide].classList.add('active');
+            updateNavigation();
+            updateProgress();
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(-1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                currentSlide = 0;
+                showSlide(currentSlide);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                currentSlide = totalSlides - 1;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let startY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!startX || !startY) return;
+
+            let endX = e.changedTouches[0].clientX;
+            let endY = e.changedTouches[0].clientY;
+
+            let diffX = startX - endX;
+            let diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 50) {
+                    changeSlide(1); // Swipe left -> next slide
+                } else if (diffX < -50) {
+                    changeSlide(-1); // Swipe right -> previous slide
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

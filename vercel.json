@@ -15,6 +15,10 @@
     {
       "source": "/erp-partners",
       "destination": "/erp-partners/index.html"
+    },
+    {
+      "source": "/h2h-partners-public",
+      "destination": "/h2h-partners-public/index.html"
     }
   ]
 }
