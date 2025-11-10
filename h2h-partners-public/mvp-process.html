@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso MVP - Lanzamiento Shinkansen H2H</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geometria:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primaryGreen1: #05be50;
+            --primaryGreenDark: #049543;
+            --primaryGreenLight: #66D691;
+            --secondaryBlue1: #0039A6;
+            --secondaryBlueDark: #002F85;
+            --extendedBeige1: #F0F0DC;
+            --extendedBeige2: #F5F5E6;
+            --extendedOrange1: #FF6B35;
+            --extendedYellow1: #F1C40F;
+            --extendedRed1: #E74C3C;
+            --grayBlack: #0F191E;
+            --grayText: #333333;
+            --grayMedium: #666666;
+            --grayBackground: #F8F9FA;
+            --white: #FFFFFF;
+            --shadow-md: 0 4px 8px rgba(15, 25, 30, 0.15);
+            --shadow-lg: 0 8px 16px rgba(15, 25, 30, 0.2);
+            --transition-normal: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--grayBackground) 0%, var(--extendedBeige1) 100%);
+            color: var(--grayText);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 60px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primaryGreen1);
+        }
+
+        .ibk-logo {
+            font-family: 'Geometria', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primaryGreen1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primaryGreen1);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: var(--transition-normal);
+        }
+
+        .back-link:hover {
+            background: var(--primaryGreenDark);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-family: 'Geometria', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--grayBlack);
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: var(--primaryGreen1);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--grayMedium);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .info-section {
+            background: var(--grayBackground);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primaryGreen1);
+        }
+
+        .info-section h2 {
+            font-family: 'Geometria', sans-serif;
+            color: var(--grayBlack);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .info-section h3 {
+            color: var(--secondaryBlue1);
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .business-model {
+            background: linear-gradient(135deg, #e8f5e9 0%, var(--white) 100%);
+            border-left-color: var(--primaryGreen1);
+        }
+
+        .mvp-process {
+            background: linear-gradient(135deg, #e3f2fd 0%, var(--white) 100%);
+            border-left-color: var(--secondaryBlue1);
+        }
+
+        .validations {
+            background: linear-gradient(135deg, #fff9c4 0%, var(--white) 100%);
+            border-left-color: var(--extendedYellow1);
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #c8e6c9 0%, var(--white) 100%);
+            border-left-color: var(--primaryGreen1);
+        }
+
+        ul {
+            line-height: 1.8;
+            padding-left: 25px;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: #fff9c4;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--grayBlack);
+        }
+
+        .flow-example {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primaryGreen1);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-box {
+            background: var(--extendedBeige2);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--extendedOrange1);
+        }
+
+        .contact-box strong {
+            color: var(--secondaryBlue1);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid var(--extendedYellow1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .diagram-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-md);
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .legend {
+            background: var(--grayBackground);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--secondaryBlue1);
+        }
+
+        .legend h2 {
+            font-family: 'Geometria', sans-serif;
+            color: var(--grayBlack);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            padding: 12px;
+            border-radius: 6px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .legend-symbol {
+            width: 45px;
+            height: 35px;
+            border: 2px solid var(--secondaryBlue1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            border-radius: 4px;
+        }
+
+        .legend-symbol.start-end {
+            border-radius: 50%;
+            background: #e8f5e9;
+            border-color: var(--primaryGreen1);
+        }
+
+        .legend-symbol.task {
+            background: #e3f2fd;
+            border-color: var(--secondaryBlue1);
+        }
+
+        .legend-symbol.message {
+            border: 2px dashed var(--extendedOrange1);
+            background: #fff9c4;
+        }
+
+        .legend-symbol.system {
+            background: #f3e5f5;
+            border-color: #9c27b0;
+        }
+
+        .participant {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--grayBackground);
+            border-left: 5px solid var(--primaryGreen1);
+            border-radius: 6px;
+        }
+
+        .participant-name {
+            font-weight: 700;
+            color: var(--secondaryBlue1);
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .participant-role {
+            color: var(--grayMedium);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--primaryGreen1);
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 40px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .ibk-logo {
+                font-size: 1.8rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="ibk-logo">Interbank</div>
+            <a href="index.html" class="back-link">
+                ← Volver a Presentación
+            </a>
+        </div>
+
+        <h1>Proceso <span class="highlight">MVP</span></h1>
+        <p class="subtitle">Lanzamiento Operacional Shinkansen H2H</p>
+
+        <!-- Modelo de Negocio -->
+        <div class="info-section business-model">
+            <h2>🏢 Modelo de Negocio Shinkansen-Interbank</h2>
+
+            <h3>Rol de Shinkansen</h3>
+            <ul>
+                <li><strong>Intermediario técnico</strong> para múltiples empresas cliente</li>
+                <li>Cada empresa mantiene <span class="highlight-box">contrato directo con Interbank</span></li>
+                <li>Empresas exoneradas de comisiones mediante <span class="highlight-box">aplicación F11</span></li>
+                <li>Shinkansen cobra comisiones por Interbank y transfiere el monto total mensualmente</li>
+            </ul>
+
+            <h3>Flujo Económico Propuesto</h3>
+            <div class="flow-example">
+1. Empresa realiza operaciones vía Shinkansen
+   ↓
+2. Interbank NO cobra comisión directa a empresa (exonerada F11)
+   ↓
+3. Shinkansen acumula comisiones de todas sus empresas
+   ↓
+4. Fin de mes: Shinkansen transfiere monto total a Interbank
+   ↓
+5. Interbank emite comprobante a favor de Shinkansen
+            </div>
+
+            <div class="warning-box">
+                <strong>💡 Ventaja del modelo:</strong>
+                Centraliza el cobro de comisiones en Shinkansen, simplificando la gestión para empresas individuales y consolidando la facturación bajo el esquema Revenue Share 50/50.
+            </div>
+        </div>
+
+        <!-- Proceso MVP Manual -->
+        <div class="info-section mvp-process">
+            <h2>🚀 Proceso MVP Manual (Implementación Inmediata)</h2>
+
+            <h3>Configuración Inicial</h3>
+            <ul>
+                <li>Exoneración temporal mediante <span class="highlight-box">F11</span> para empresa piloto</li>
+                <li>Cuantificación manual de operaciones desde <span class="highlight-box">PPA</span></li>
+                <li>Revenue Share 50/50: Shinkansen cobra 1.40-2.00 soles/txn → Interbank recibe 0.70-1.00 soles</li>
+            </ul>
+
+            <h3>Ejemplo de Cálculo</h3>
+            <div class="flow-example">
+Ejemplo con tarifa 1.40 soles:
+1,000 pagos × S/ 1.40 = S/ 1,400.00 total cobrado por Shinkansen
+50% Revenue Share = S/ 700.00 para Interbank
+            </div>
+
+            <h3>Flujo Operativo Manual</h3>
+            <ol>
+                <li><strong>Business Operations</strong> coordina instrucción de cargo con Shinkansen</li>
+                <li><strong>GTP</strong> (Gestión de Tesorería y Pagos) ejecuta débito en cuenta de Shinkansen</li>
+                <li><strong>Business Operations</strong> solicita vía <span class="highlight-box">Power Up</span> emisión de comprobante</li>
+                <li><strong>Equipo de Comprobantes</strong> emite factura automáticamente</li>
+                <li>Notificación a Shinkansen sobre comprobante emitido</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>📋 Proceso temporal:</strong>
+                Este flujo manual es temporal para validar el modelo operacional y financiero antes de desarrollar automatización completa. Permite probar el Revenue Share 50/50 en condiciones reales.
+            </div>
+        </div>
+
+        <!-- Validaciones Requeridas -->
+        <div class="info-section validations">
+            <h2>✅ Validaciones Requeridas</h2>
+
+            <h3>1. Comprobantes Electrónicos</h3>
+            <div class="contact-box">
+                <strong>Responsables:</strong> Lourdes / Equipo Mission Possible
+            </div>
+            <ul>
+                <li><span class="highlight-box">Certificación conjunta necesaria</span> para proceso automático</li>
+                <li>Validación de:
+                    <ul>
+                        <li>PDF del comprobante</li>
+                        <li>Registro de ventas</li>
+                        <li>Reporte operativo</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>⚠️ Restricción temporal:</strong>
+                Equipo en modificaciones durante noviembre - capacidad manual limitada para emisión de comprobantes.
+            </div>
+
+            <h3>2. Validación de Impuestos</h3>
+            <div class="contact-box">
+                <strong>Contactos Clave:</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Jorge Maza</li>
+                    <li>Liz Ceballos</li>
+                    <li>Walter Taipe</li>
+                </ul>
+            </div>
+
+            <h3>Información Requerida para Aprobación</h3>
+            <ul>
+                <li>Volumen mensual aproximado de operaciones</li>
+                <li>Timeline para desarrollo automático (post-MVP)</li>
+                <li>Impacto fiscal del modelo intermediario Revenue Share</li>
+                <li>Requisitos de documentación tributaria para Shinkansen</li>
+            </ul>
+        </div>
+
+        <!-- Próximos Pasos -->
+        <div class="info-section next-steps">
+            <h2>📍 Próximos Pasos</h2>
+
+            <ul class="checklist">
+                <li><strong>Validar proceso manual</strong> con Sandra Herrera y Mercy (equipo comprobantes)</li>
+                <li><strong>Consultar con equipo de impuestos</strong> sobre nuevo modelo de intermediación Revenue Share</li>
+                <li><strong>Obtener aprobación gerencial</strong> para procesos manuales temporales</li>
+                <li><strong>Implementar con empresa piloto</strong> para validar modelo completo operacional y financiero</li>
+                <li><strong>Evaluar desarrollo automático</strong> para escalamiento futuro (Q1 2026)</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>🎯 Objetivo del MVP:</strong>
+                Validar viabilidad operativa, fiscal y financiera del modelo Revenue Share 50/50 antes de invertir en automatización completa. El MVP permite probar con empresa piloto y ajustar antes de escalar.
+            </div>
+        </div>
+
+        <!-- BPMN Diagram -->
+        <h2 style="text-align: center; color: var(--grayBlack); margin-top: 50px; font-family: 'Geometria', sans-serif; font-size: 2rem;">Diagrama BPMN del Proceso</h2>
+
+        <div class="legend">
+            <h2>Leyenda BPMN</h2>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-symbol start-end">⭕</div>
+                    <span>Inicio/Fin</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol task">📋</div>
+                    <span>Tarea/Actividad</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol message">✉️</div>
+                    <span>Mensaje/Comunicación</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol system">⚙️</div>
+                    <span>Sistema Automático</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="diagram-container">
+            <div class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f5e9','primaryTextColor':'#000','primaryBorderColor':'#05be50','lineColor':'#0039A6','secondaryColor':'#e3f2fd','tertiaryColor':'#f3e5f5'}}}%%
+graph TB
+    subgraph OperacionesContractuales["🏢 OPERACIONES Y CONTRACTUALES"]
+        A((Inicio))
+        B[Aplica exoneración F11<br/>para empresa piloto]
+    end
+
+    subgraph PPA["💻 PPA - SISTEMA"]
+        C[Genera el DEBE<br/>Cuantificación manual<br/>Ej: 1000 pagos × 50% × S/1.40 = S/700]
+    end
+
+    subgraph BizOps["👥 BUSINESS OPERATIONS"]
+        D[Coordina instrucción<br/>de cargo con SKS]
+        F[Instruye GTP para<br/>débito en cuenta]
+        K[Solicita emisión vía<br/>Power Up]
+        L[Notifica a SKS<br/>comprobante emitido]
+    end
+
+    subgraph Shinkansen["🏭 SHINKANSEN - SKS"]
+        E[Confirma datos:<br/>- Cantidad operaciones<br/>- Tarifa cliente<br/>- Monto 50% a IBK]
+        M[Recibe comprobante<br/>automático por correo]
+    end
+
+    subgraph GTP["💼 GTP - GESTIÓN TESORERÍA"]
+        G[Ejecuta débito en<br/>cuenta Shinkansen]
+    end
+
+    subgraph Interbank["🏦 INTERBANK - EQUIPO DÉBITO"]
+        H[Debita a Shinkansen]
+    end
+
+    subgraph PowerUp["⚙️ POWER UP"]
+        I[Recibe solicitud<br/>de comprobante]
+    end
+
+    subgraph EqComprobantes["📄 EQUIPO COMPROBANTES"]
+        J[Revisa Power Up<br/>Valida plantilla<br/>y datos]
+        N[Emite factura<br/>automáticamente]
+    end
+
+    subgraph Sistema["🤖 SISTEMA AUTOMÁTICO"]
+        O[Envía comprobante PDF<br/>al correo indicado]
+    end
+
+    P((Fin))
+
+    A --> B
+    B -.->|genera| C
+    C -.->|notifica| D
+    D -.->|solicita confirmación| E
+    E -.->|confirma por correo| F
+    F -->|instruye| G
+    G -->|ejecuta| H
+    H -.->|completa débito| K
+    K -.->|solicita vía Power Up| I
+    I -->|disponible| J
+    J -->|valida y aprueba| N
+    N -->|genera| O
+    O -.->|envía automático| M
+    M -.->|confirma recepción| L
+    L --> P
+
+    classDef startEnd fill:#e8f5e9,stroke:#05be50,stroke-width:3px
+    classDef task fill:#e3f2fd,stroke:#0039A6,stroke-width:2px
+    classDef message fill:#fff9c4,stroke:#FF6B35,stroke-width:2px
+    classDef system fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+
+    class A,P startEnd
+    class B,D,E,F,G,H,J,K,L,N task
+    class C,I,O system
+            </div>
+        </div>
+
+        <div style="background: var(--grayBackground); padding: 30px; border-radius: 10px; margin-top: 30px;">
+            <h2 style="font-family: 'Geometria', sans-serif; color: var(--grayBlack); margin-bottom: 25px;">Participantes del Proceso</h2>
+
+            <div class="participant">
+                <div class="participant-name">🏢 Operaciones y Contractuales</div>
+                <div class="participant-role">Aplica exoneración F11 temporal para empresa piloto</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">💻 PPA (Sistema)</div>
+                <div class="participant-role">Genera registro de deuda (DEBE) mediante cuantificación manual: volumen × 50% × tarifa cliente</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">👥 Business Operations (BizOps)</div>
+                <div class="participant-role">Orquesta todo el proceso: coordina con Shinkansen, instruye GTP, solicita comprobante y notifica</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">🏭 Shinkansen (SKS)</div>
+                <div class="participant-role">Partner tecnológico que confirma datos del Revenue Share 50/50 y recibe comprobante consolidado</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">💼 GTP (Gestión de Tesorería y Pagos)</div>
+                <div class="participant-role">Ejecuta el débito en la cuenta de Shinkansen según instrucción</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">🏦 Interbank - Equipo de Débito</div>
+                <div class="participant-role">Realiza el cargo efectivo en la cuenta</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">⚙️ Power Up</div>
+                <div class="participant-role">Sistema para solicitar emisión de comprobantes</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">📄 Equipo de Comprobantes</div>
+                <div class="participant-role">Valida datos y emite factura electrónica (capacidad manual limitada en noviembre)</div>
+            </div>
+
+            <div class="participant">
+                <div class="participant-name">🤖 Sistema Automático</div>
+                <div class="participant-role">Envía comprobante PDF automáticamente al correo registrado</div>
+            </div>
+
+            <h2 style="margin-top: 40px; font-family: 'Geometria', sans-serif; color: var(--grayBlack); margin-bottom: 20px;">Fases del Proceso MVP</h2>
+
+            <div class="participant">
+                <strong>Fase 1: Configuración y Cuantificación</strong><br/>
+                Aplicar F11 → PPA cuantifica manual (50% del volumen) → BizOps coordina con Shinkansen
+            </div>
+
+            <div class="participant">
+                <strong>Fase 2: Ejecución del Débito</strong><br/>
+                Shinkansen confirma → BizOps instruye GTP → Débito ejecutado
+            </div>
+
+            <div class="participant">
+                <strong>Fase 3: Emisión de Comprobante</strong><br/>
+                BizOps solicita vía Power Up → Equipo valida → Emite factura
+            </div>
+
+            <div class="participant">
+                <strong>Fase 4: Distribución y Confirmación</strong><br/>
+                Sistema envía automático → Shinkansen recibe → BizOps confirma
+            </div>
+
+            <div class="warning-box" style="margin-top: 25px;">
+                <strong>⚠️ Restricciones del MVP:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Cuantificación manual desde PPA (no automática)</li>
+                    <li>Capacidad limitada del equipo de comprobantes en noviembre</li>
+                    <li>Requiere validaciones de impuestos antes de escalar</li>
+                    <li>Proceso pensado para empresa piloto, no producción masiva</li>
+                    <li>Revenue Share 50/50 calculado manualmente en esta fase</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            }
+        });
+    </script>
+</body>
+</html>
