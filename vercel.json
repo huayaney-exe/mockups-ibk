@@ -19,6 +19,18 @@
     {
       "source": "/h2h-partners-public",
       "destination": "/h2h-partners-public/index.html"
+    },
+    {
+      "source": "/h2h-partners-public/mvp-process",
+      "destination": "/h2h-partners-public/mvp-process.html"
+    },
+    {
+      "source": "/h2h-partners-public/bpmn",
+      "destination": "/h2h-partners-public/bpmn.html"
+    },
+    {
+      "source": "/alianza-comercial",
+      "destination": "/alianza-comercial/index.html"
     }
   ]
 }
